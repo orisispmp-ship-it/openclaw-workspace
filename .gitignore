@@ -1,0 +1,22 @@
+# OS / editor noise
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Secrets — never commit
+.env
+.env.*
+**/*.key
+**/*.pem
+**/secrets*
+*credential*
+
+# Local runtime / scratch
+tmp/
+state/
+.openclaw/
+node_modules/
+*.log
+
+# Large local media scratch (keep curated files only)
+# media/
