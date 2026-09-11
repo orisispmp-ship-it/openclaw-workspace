@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>관상 (觀相) — AI 얼굴 분석</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;600;700;900&family=Noto+Sans+KR:wght@300;400;500;700&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background: #1a1a1a;
+    min-height: 100vh;
+    color: #e0d5c8;
+  }
+
+  .bg-pattern {
+    position: fixed;
+    top: 0; left: 0; width: 100vw; height: 100vh;
+    background: radial-gradient(ellipse at 20% 50%, rgba(120,60,30,0.12) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 50%, rgba(50,30,80,0.1) 0%, transparent 50%),
+                linear-gradient(180deg, #1a1410 0%, #1f1a16 100%);
+    z-index: -1;
+  }
+
+  .container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+
+  header {
+    text-align: center;
+    padding: 60px 20px 40px;
+    position: relative;
+  }
+
+  header::after {
+    content: '';
+    display: block;
+    width: 60px;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #c9a96e, transparent);
+    margin: 20px auto 0;
+  }
+
+  h1 {
+    font-family: 'Noto Serif KR', serif;
+    font-size: clamp(2.2rem, 5vw, 3.5rem);
+    font-weight: 900;
+    color: #c9a96e;
+    letter-spacing: 0.15em;
+    text-shadow: 0 2px 20px rgba(201,169,110,0.15);
+  }
+
+  h1 small {
+    display: block;
+    font-size: 0.35em;
+    font-weight: 300;
+    color: #8a7a6a;
+    letter-spacing: 0.3em;
+    margin-top: 8px;
+    font-family: 'Noto Sans KR', sans-serif;
+  }
+
+  .subtitle {
+    color: #8a7a6a;
+    font-size: 0.95rem;
+    margin-top: 12px;
+    font-weight: 300;
+  }
+
+  .card {
+    background: linear-gradient(145deg, rgba(30,26,22,0.95), rgba(25,22,18,0.95));
+    border: 1px solid rgba(201,169,110,0.15);
+    border-radius: 16px;
+    padding: 30px;
+    margin-bottom: 20px;
+    backdrop-filter: blur(20px);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+  }
+
+  .upload-area {
+    border: 2px dashed rgba(201,169,110,0.3);
+    border-radius: 12px;
+    padding: 50px 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s;
+    position: relative;
+  }
+
+  .upload-area:hover { border-color: rgba(201,169,110,0.6); background: rgba(201,169,110,0.03); }
+  .upload-area.dragover { border-color: #c9a96e; background: rgba(201,169,110,0.08); }
+
+  .upload-icon { font-size: 48px; margin-bottom: 15px; }
+  .upload-text { font-size: 1.1rem; color: #c9a96e; font-weight: 500; }
+  .upload-hint { font-size: 0.85rem; color: #6a5a4a; margin-top: 8px; }
+  .upload-area input[type="file"] { display: none; }
+
+  .preview-container {
+    display: none;
+    position: relative;
+    margin-top: 20px;
+  }
+
+  .preview-container canvas {
+    width: 100%;
+    max-width: 500px;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+    border-radius: 8px;
+  }
+
+  .status {
+    text-align: center;
+    padding: 20px;
+    display: none;
+  }
+
+  .status .spinner {
+    width: 40px; height: 40px;
+    border: 3px solid rgba(201,169,110,0.15);
+    border-top-color: #c9a96e;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 15px;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .status-text { color: #c9a96e; font-size: 0.95rem; }
+
+  .results { display: none; }
+  .result-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 25px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid rgba(201,169,110,0.1);
+  }
+
+  .result-header .face-icon { font-size: 40px; }
+  .result-header h2 {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 1.5rem;
+    color: #c9a96e;
+    font-weight: 700;
+  }
+
+  .tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+
+  .tab {
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    border: 1px solid rgba(201,169,110,0.15);
+    background: transparent;
+    color: #8a7a6a;
+    transition: all 0.3s;
+    font-family: 'Noto Sans KR', sans-serif;
+  }
+
+  .tab:hover { border-color: rgba(201,169,110,0.4); color: #c9a96e; }
+  .tab.active { background: rgba(201,169,110,0.1); border-color: #c9a96e; color: #c9a96e; }
+
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  .feature-card {
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(201,169,110,0.08);
+    border-radius: 10px;
+    padding: 18px;
+    margin-bottom: 12px;
+  }
+
+  .feature-card h3 {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 1.05rem;
+    color: #c9a96e;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .feature-card p {
+    font-size: 0.9rem;
+    line-height: 1.7;
+    color: #b0a090;
+  }
+
+  .feature-card .score {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    margin-right: 6px;
+  }
+
+  .score-good { background: rgba(70,140,80,0.2); color: #6abf7a; }
+  .score-mid { background: rgba(200,160,60,0.2); color: #d4b84a; }
+  .score-bad { background: rgba(180,60,60,0.2); color: #d46a6a; }
+
+  .summary-box {
+    background: linear-gradient(135deg, rgba(201,169,110,0.06), rgba(201,169,110,0.02));
+    border: 1px solid rgba(201,169,110,0.15);
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 20px;
+  }
+
+  .summary-box h3 {
+    font-family: 'Noto Serif KR', serif;
+    color: #c9a96e;
+    font-size: 1.1rem;
+    margin-bottom: 12px;
+  }
+
+  .summary-box p {
+    font-size: 0.92rem;
+    line-height: 1.8;
+    color: #b0a090;
+  }
+
+  .reset-btn {
+    display: inline-block;
+    padding: 12px 30px;
+    background: rgba(201,169,110,0.1);
+    border: 1px solid rgba(201,169,110,0.3);
+    border-radius: 8px;
+    color: #c9a96e;
+    cursor: pointer;
+    font-size: 0.95rem;
+    font-family: 'Noto Sans KR', sans-serif;
+    transition: all 0.3s;
+    margin-top: 10px;
+  }
+
+  .reset-btn:hover { background: rgba(201,169,110,0.2); }
+
+  .face-shape-badge {
+    display: inline-block;
+    font-size: 0.8rem;
+    padding: 3px 12px;
+    border-radius: 12px;
+    background: rgba(201,169,110,0.1);
+    color: #c9a96e;
+    border: 1px solid rgba(201,169,110,0.2);
+  }
+
+  footer {
+    text-align: center;
+    padding: 40px;
+    color: #4a3a2a;
+    font-size: 0.8rem;
+    letter-spacing: 0.05em;
+  }
+
+  .photo-controls {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 15px;
+  }
+
+  @media (max-width: 600px) {
+    .container { padding: 10px; }
+    .card { padding: 18px; }
+    header { padding: 30px 10px 20px; }
+  }
+</style>
+</head>
+<body>
+<div class="bg-pattern"></div>
+<div class="container">
+  <header>
+    <h1>
+      觀 相
+      <small>AI 얼굴 분석 · 관상 풀이</small>
+    </h1>
+    <p class="subtitle">사진 한 장으로 알아보는 당신의 얼굴 이야기</p>
+  </header>
+
+  <div class="card" id="uploadCard">
+    <div class="upload-area" id="dropZone">
+      <div class="upload-icon">📸</div>
+      <div class="upload-text">사진을 업로드하세요</div>
+      <div class="upload-hint">얼굴이 선명하게 나온 사진이 좋습니다</div>
+      <input type="file" id="fileInput" accept="image/*">
+      <div class="photo-controls">
+        <button class="reset-btn" id="selectBtn">📁 사진 선택</button>
+        <button class="reset-btn" id="cameraBtn">📷 카메라 촬영</button>
+      </div>
+    </div>
+
+    <div class="preview-container" id="previewContainer">
+      <canvas id="faceCanvas"></canvas>
+      <div style="text-align:center;margin-top:10px;">
+        <button class="reset-btn" id="reSelectBtn">🔄 다른 사진</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="status" id="status">
+    <div class="spinner"></div>
+    <div class="status-text" id="statusText">얼굴 특징을 분석하고 있습니다...</div>
+  </div>
+
+  <div class="results" id="results">
+    <div class="card">
+      <div class="result-header">
+        <div class="face-icon">🧐</div>
+        <h2 id="resultTitle">관상 분석 결과</h2>
+      </div>
+
+      <div class="summary-box" id="summaryBox">
+        <h3>📜 종합 관상</h3>
+        <p id="summaryText">분석 중...</p>
+      </div>
+
+      <div class="tabs" id="tabs">
+        <div class="tab active" data-tab="face">얼굴형</div>
+        <div class="tab" data-tab="forehead">이마</div>
+        <div class="tab" data-tab="eyebrows">눈썹</div>
+        <div class="tab" data-tab="eyes">눈</div>
+        <div class="tab" data-tab="nose">코</div>
+        <div class="tab" data-tab="mouth">입</div>
+        <div class="tab" data-tab="chin">턱</div>
+      </div>
+
+      <div id="tabContent">
+        <div class="tab-content active" id="tab-face"></div>
+        <div class="tab-content" id="tab-forehead"></div>
+        <div class="tab-content" id="tab-eyebrows"></div>
+        <div class="tab-content" id="tab-eyes"></div>
+        <div class="tab-content" id="tab-nose"></div>
+        <div class="tab-content" id="tab-mouth"></div>
+        <div class="tab-content" id="tab-chin"></div>
+      </div>
+
+      <div style="text-align:center;margin-top:20px;">
+        <button class="reset-btn" id="resetBtn">🔄 새로 분석하기</button>
+      </div>
+    </div>
+  </div>
+
+  <footer>觀相 — 전통 관상학과 AI 기술의 만남 | 재미로 보세요 😊</footer>
+</div>
+
+<script async src="https://cdn.jsdelivr.net/npm/@vladmandic/face-api@1.8.4/dist/face-api.js"></script>
+<script>
+(async () => {
+  // ---- DOM refs ----
+  const dropZone = document.getElementById('dropZone');
+  const fileInput = document.getElementById('fileInput');
+  const selectBtn = document.getElementById('selectBtn');
+  const cameraBtn = document.getElementById('cameraBtn');
+  const previewContainer = document.getElementById('previewContainer');
+  const canvas = document.getElementById('faceCanvas');
+  const ctx = canvas.getContext('2d');
+  const status = document.getElementById('status');
+  const statusText = document.getElementById('statusText');
+  const results = document.getElementById('results');
+  const reSelectBtn = document.getElementById('reSelectBtn');
+  const resetBtn = document.getElementById('resetBtn');
+
+  let currentImage = null;
+  let faceApiReady = false;
+
+  // ---- Load face-api ----
+  async function loadFaceApi() {
+    status.style.display = 'block';
+    statusText.textContent = 'AI 모델을 불러오는 중...';
+    try {
+      const MODEL_URL = 'https://cdn.jsdelivr.net/npm/@vladmandic/face-api@1.8.4/model/';
+      await faceapi.nets.tinyFaceDetector.loadFromUri(MODEL_URL);
+      await faceapi.nets.faceLandmark68Net.loadFromUri(MODEL_URL);
+      faceApiReady = true;
+      console.log('face-api loaded');
+    } catch (e) {
+      console.warn('face-api load failed, using fallback:', e);
+    }
+    status.style.display = 'none';
+  }
+
+  // ---- Korean physiognomy data ----
+  const 관상DB = {
+    faceShape: {
+      '계란형': { score: 5, desc: '균형 잡힌 전형적인 이상형 얼굴입니다. 인복이 있고 대인관계가 원만합니다.', detail: '상·중·하정이 고르게 발달하여 균형감각이 뛰어납니다. 지혜롭고 처세에 능하며, 주변의 신뢰를 얻는 타입입니다.' },
+      '각진형': { score: 4, desc: '의지가 강하고 추진력이 있습니다. 리더십이 있습니다.', detail: '정치가나 경영인에게 많은 유형입니다. 고집이 센 면이 있지만 목표를 향한 집중력이 뛰어납니다. 결정력과 실행력이 좋습니다.' },
+      '긴형': { score: 4, desc: '이상적이고 계획적인 성격입니다. 꼼꼼하고 분석적입니다.', detail: '사려 깊고 신중하며 학구적인 면이 있습니다. 때로는 완벽주의 성향이 있으며, 전문가 기질이 있습니다.' },
+      '둥근형': { score: 4, desc: '온화하고 친화력이 좋습니다. 사람을 편안하게 합니다.', detail: '원만한 성격으로 대인관계가 부드럽습니다. 감수성이 풍부하고 예술적 감각이 있습니다. 다소 감정적인 면이 있습니다.' },
+      '하트형': { score: 3, desc: '창의적이고 감각적입니다. 예술적 재능이 있습니다.', detail: '개성이 뚜렷하고 독창적인 면이 있습니다. 사람들의 시선을 끄는 매력이 있습니다. 감정 기복이 있을 수 있습니다.' },
+      '마름모형': { score: 3, desc: '개성 있고 독특한 매력의 소유자입니다.', detail: ' 틀에 박히지 않은 자유로운 영혼입니다. 창의력이 풍부하고 예술 방면에서 재능을 발휘합니다.' },
+    },
+    forehead: {
+      '넓고豊満': { score: 5, desc: '지혜롭고 총명합니다. 조상의 덕이 있고 관운이 있습니다.', detail: '이마가 넓고 풍만하면 지혜와 명예를 상징합니다. 학업운과 직장운이 좋으며, 윗사람의 도움을 받습니다.' },
+      '적당': { score: 4, desc: '균형 잡힌 이마입니다. 현명하고 합리적입니다.', detail: '상중하정의 균형이 좋아 안정된 인생을 살아갑니다. 판단력이 좋고 현실 감각이 뛰어납니다.' },
+      '좁음': { score: 3, desc: '현실적이고 실용적인 성향입니다. 꼼꼼합니다.', detail: '눈앞의 일을 차근차근 처리하는 스타일입니다. 다소 소극적일 수 있으나 꾸준함이 장점입니다.' },
+      '높음': { score: 4, desc: '지적 호기심이 많고 이상주의적입니다.', detail: '논리적 사고와 분석력이 뛰어납니다. 문학이나 예술, 학문 분야에서 두각을 나타냅니다.' },
+    },
+    eyebrows: {
+      '진하고 길': { score: 5, desc: '강한 의지력과 추진력의 소유자입니다.', detail: '진하고 긴 눈썹은 건강과 활력, 강한 추진력을 의미합니다. 친구가 많고 신뢰할 수 있는 사람입니다.' },
+      '가늘고 길': { score: 4, desc: '섬세하고 예민한 감각의 소유자입니다.', detail: '예술적 감각이 뛰어나고 눈치가 빠릅니다. 대인관계에서 배려심이 깊습니다.' },
+      '일자형': { score: 4, desc: '원칙과 소신이 뚜렷합니다. 성실하고 꾸준합니다.', detail: '곧은 성격으로 약속을 잘 지키고 정의감이 있습니다. 신뢰할 수 있는 사람입니다.' },
+      '처진형': { score: 3, desc: '온화하고 자비로운 성격입니다.', detail: '인정이 많고 남을 잘 도와줍니다. 때로는 결정을 망설이는 면이 있을 수 있습니다.' },
+      '아치형': { score: 4, desc: '밝고 긍정적인 에너지의 소유자입니다.', detail: '항상 웃는 얼굴로 사람들에게 호감을 줍니다. 사교성이 좋고 낙천적인 성격입니다.' },
+    },
+    eyes: {
+      '크고 맑음': { score: 5, desc: '순수하고 정직한 성격입니다. 통찰력이 뛰어납니다.', detail: '눈이 크고 맑으면 마음이 넓고 지혜롭습니다. 사람을 보는 눈이 있어 인재를 잘 알아봅니다. 복록이 있습니다.' },
+      '가늘고 긺': { score: 4, desc: '침착하고 신중합니다. 계획적인 성격입니다.', detail: '매사를 신중하게 판단하고 행동합니다. 관찰력이 뛰어나고 치밀한 면이 있습니다. 장기적인 안목이 있습니다.' },
+      '눈매가 강함': { score: 3, desc: '강한 카리스마와 추진력의 소유자입니다.', detail: '목표를 향한 집중력이 뛰어납니다. 다소 강해 보일 수 있으나 내면은 외로움을 잘 타는 편입니다.' },
+      '눈이 빛남': { score: 5, desc: '총명하고 지혜롭습니다. 운기가 좋습니다.', detail: '눈에 광채가 있으면 건강하고 운기가 좋은 상태입니다. 판단력이 빠르고 기회를 잘 포착합니다.' },
+      '눈꼬리 올라감': { score: 4, desc: '야망과 열정이 있는 카리스마형입니다.', detail: '승부욕이 강하고 리더십이 있습니다. 권력이나 명예에 대한 욕망이 있으며 성취욕이 높습니다.' },
+    },
+    nose: {
+      '높고 곧음': { score: 5, desc: '자존감이 높고 강단 있습니다. 자수성가형입니다.', detail: '콧대가 높고 곧으면 주관이 뚜렷하고 자립심이 강합니다. 중년 이후 운이 트이며 경제적으로 안정됩니다.' },
+      '적당한 높이': { score: 4, desc: '안정적이고 균형 잡힌 성격입니다.', detail: '무난한 인생을 살아가며 주변과 잘 어울립니다. 신용과 명예를 중시합니다.' },
+      '콧날이 둥금': { score: 3, desc: '온화하고 너그러운 성격입니다.', detail: ' 사람과의 관계를 중시하고 화합을 잘 이끌어냅니다. 금전 감각이 다소 무딜 수 있습니다.' },
+      '코가 큼': { score: 4, desc: '대인배 기질이 있고 관대합니다.', detail: '리더십과 포용력을 겸비했습니다. 돈의 흐름이 좋고 재물운이 있습니다.' },
+    },
+    mouth: {
+      '크고 균형': { score: 5, desc: '대인관계가 넓고 표현력이 뛰어납니다.', detail: '입이 크고 균형 잡히면 사회성이 좋고 말을 잘합니다. 식복이 있고 재물운도 따릅니다.' },
+      '작고 예쁨': { score: 4, desc: '섬세하고 우아한 성격입니다.', detail: '말수가 적을 수 있으나 한마디 한마디에 무게가 있습니다. 내성적인 편이나 신중함이 장점입니다.' },
+      '도톰함': { score: 4, desc: '감수성이 풍부하고 정이 많습니다.', detail: '인정이 많고 식욕과 애정이 풍부합니다. 예술적 감각이 뛰어나고 미적 감각이 좋습니다.' },
+      '얇음': { score: 3, desc: '논리적이고 이성적인 성격입니다.', detail: '감정 표현에 인색할 수 있으나 이성적인 판단을 잘 합니다. 말재주가 있고 날카로운 분석력이 있습니다.' },
+    },
+    chin: {
+      '둥글고豊満': { score: 5, desc: '복록이 있고 인생 말년이 편안합니다.', detail: '턱이 둥글고 풍만하면 후복이 있고 말년이 편안합니다. 저축성과 지속력이 있으며 재물을 모읍니다.' },
+      '각진 턱': { score: 4, desc: '고집과 의지가 강합니다. 끝까지 해냅니다.', detail: '한번 시작한 일은 반드시 끝내는 근성이 있습니다. 말년에도 왕성한 활동력을 보입니다.' },
+      '뾰족한 턱': { score: 3, desc: '감각적이고 독창적인 스타일입니다.', detail: '예술적 재능이 있고 독특한 아이디어가 많습니다. 다소 변덕스러운 면이 있을 수 있습니다.' },
+      '약간 긺': { score: 4, desc: '인내심이 강하고 책임감이 있습니다.', detail: '어려움을 극복하는 힘이 있고 인생 후반에 운기가 트입니다. 믿음직스러운 사람입니다.' },
+    },
+  };
+
+  // ---- Face analysis ----
+  function analyzeFace(detection, landmarks, imgW, imgH) {
+    const box = detection.detection.box;
+    const w = box.width / imgW;
+    const h = box.height / imgH;
+    const cx = (box.x + box.width/2) / imgW;
+    const cy = (box.y + box.height/2) / imgH;
+    const aspect = box.width / box.height;
+
+    // Get all 68 landmarks
+    const pts = landmarks.positions;
+    
+    // Helper: distance between two landmarks by indices
+    function dist(i, j) {
+      const dx = pts[i].x - pts[j].x;
+      const dy = pts[i].y - pts[j].y;
+      return Math.sqrt(dx*dx + dy*dy);
+    }
+
+    // Face measurements
+    const faceW = dist(0, 16);   // left to right of face outline
+    const faceH = dist(8, 57);   // top of head to chin
+    const faceRatio = faceW / faceH;
+
+    // Forehead
+    const foreheadH = dist(19, 24); // brow top
+    const foreheadRel = foreheadH / faceH;
+
+    // Eyebrows
+    const browL = dist(19, 21); // left brow width
+    const browR = dist(22, 24); // right brow width
+    const browMid = dist(21, 22); // between brows
+    const browTotal = browL + browR;
+
+    // Eyes
+    const eyeL = dist(36, 39);   // left eye width
+    const eyeR = dist(42, 45);   // right eye width
+    const eyeMid = dist(39, 42); // between eyes
+
+    // Nose
+    const noseW = dist(31, 35);  // nose width
+    const noseH = dist(27, 33);  // nose height
+    const noseRatio = noseW / noseH;
+
+    // Mouth
+    const mouthW = dist(48, 54);  // mouth width
+    const mouthH = dist(51, 57);  // mouth height from upper to lower lip
+    const mouthRatio = mouthW / mouthH;
+
+    // Chin
+    const chinToMouth = dist(57, 8); // bottom of face
+    const chinRel = chinToMouth / faceH;
+
+    // ---- Classify features ----
+
+    // Face Shape
+    let faceShape;
+    const faceAspect = faceW / faceH;
+    if (faceAspect > 0.95 && faceAspect < 1.1) {
+      // Check if more round or square
+      // roundness: how close jaw contour points are to an ellipse
+      const jawLeft = dist(4, 6);
+      const jawRight = dist(10, 12);
+      const jawSymmetry = Math.abs(jawLeft - jawRight) / Math.max(jawLeft, jawRight);
+      if (jawSymmetry < 0.1) faceShape = '계란형';
+      else faceShape = '둥근형';
+    } else if (faceAspect <= 0.95) {
+      faceShape = '긴형';
+    } else if (faceAspect >= 1.05 && faceAspect < 1.15) {
+      faceShape = '계란형';
+    } else {
+      // wider face
+      const jawWidth = dist(5, 11);
+      const cheekWidth = dist(1, 15);
+      if (jawWidth / cheekWidth > 0.85) faceShape = '각진형';
+      else faceShape = '둥근형';
+    }
+
+    // Forehead
+    let forehead;
+    const fh = foreheadRel;
+    if (fh > 0.22) forehead = '넓고豊滿';
+    else if (fh > 0.17) forehead = '적당';
+    else forehead = '좁음';
+
+    // Eyebrows
+    let eyebrows;
+    const browThick = browTotal / faceW;
+    if (browThick > 0.3) eyebrows = '진하고 길';
+    else eyebrows = '일자형';
+
+    // Eyes
+    let eyes;
+    const eyeSize = (eyeL + eyeR) / (2 * faceW);
+    if (eyeSize > 0.08) eyes = '크고 맑음';
+    else eyes = '가늘고 긺';
+
+    // Nose
+    let nose;
+    const nRatio = noseRatio;
+    if (nRatio < 0.45) nose = '높고 곧음';
+    else if (nRatio < 0.6) nose = '적당한 높이';
+    else nose = '코가 큼';
+
+    // Mouth
+    let mouth;
+    const mRatio = mouthW / faceW;
+    if (mRatio > 0.22) mouth = '크고 균형';
+    else mouth = '작고 예쁨';
+
+    // Chin
+    let chin;
+    const cRel = chinRel;
+    if (cRel > 0.22) chin = '둥글고豊滿';
+    else chin = '각진 턱';
+
+    // ---- Build results ----
+    const result = {
+      faceShape: 관상DB.faceShape[faceShape] || 관상DB.faceShape['계란형'],
+      forehead: 관상DB.forehead[forehead] || 관상DB.forehead['적당'],
+      eyebrows: 관상DB.eyebrows[eyebrows] || 관상DB.eyebrows['일자형'],
+      eyes: 관상DB.eyes[eyes] || 관상DB.eyes['크고 맑음'],
+      nose: 관상DB.nose[nose] || 관상DB.nose['적당한 높이'],
+      mouth: 관상DB.mouth[mouth] || 관상DB.mouth['크고 균형'],
+      chin: 관상DB.chin[chin] || 관상DB.chin['둥글고豊滿'],
+      labels: { faceShape, forehead, eyebrows, eyes, nose, mouth, chin },
+    };
+
+    // Overall score
+    const scores = [
+      result.faceShape.score,
+      result.forehead.score,
+      result.eyebrows.score,
+      result.eyes.score,
+      result.nose.score,
+      result.mouth.score,
+      result.chin.score,
+    ];
+    const avg = scores.reduce((a,b) => a+b, 0) / scores.length;
+
+    // Generate summary
+    let summaryParts = [];
+    if (avg >= 4.3) {
+      summaryParts.push('전체적으로 균형 잡히고 복 있는 인상입니다.');
+    } else if (avg >= 3.5) {
+      summaryParts.push('대체로 좋은 인상이며, 주요 특징들이 조화를 이루고 있습니다.');
+    } else {
+      summaryParts.push('개성 있는 매력을 지니고 있습니다.');
+    }
+
+    const strongPoints = [];
+    const weakPoints = [];
+    for (const [k, v] of Object.entries(result)) {
+      if (typeof v === 'object' && v.score) {
+        if (v.score >= 5) strongPoints.push(k);
+        else if (v.score <= 3) weakPoints.push(k);
+      }
+    }
+
+    if (strongPoints.length > 0) {
+      const labels = strongPoints.map(s => ({faceShape:'얼굴형',forehead:'이마',eyebrows:'눈썹',eyes:'눈',nose:'코',mouth:'입',chin:'턱'})[s] || s);
+      summaryParts.push(`특히 ${labels.join(', ')} 부분이 돋보입니다.`);
+    }
+
+    summaryParts.push(result.faceShape.desc);
+    summaryParts.push(result.eyes.desc);
+
+    return { ...result, avgScore: avg, summary: summaryParts.join(' ') };
+  }
+
+  // ---- Render ----
+  function renderResults(data) {
+    results.style.display = 'block';
+    document.getElementById('summaryText').textContent = data.summary;
+
+    const tabContent = {
+      face: `<div class="feature-card">
+        <h3>😊 얼굴형: ${data.labels.faceShape}</h3>
+        <p><span class="score ${data.faceShape.score >= 4 ? 'score-good' : data.faceShape.score >= 3 ? 'score-mid' : 'score-bad'}">${'★'.repeat(data.faceShape.score)}${'☆'.repeat(5-data.faceShape.score)}</span> ${data.faceShape.desc}</p>
+        <p style="margin-top:8px;font-size:0.85rem;color:#8a7a6a;">${data.faceShape.detail}</p>
+      </div>`,
+      forehead: `<div class="feature-card">
+        <h3>🧠 이마: ${data.labels.forehead}</h3>
+        <p><span class="score ${data.forehead.score >= 4 ? 'score-good' : data.forehead.score >= 3 ? 'score-mid' : 'score-bad'}">${'★'.repeat(data.forehead.score)}${'☆'.repeat(5-data.forehead.score)}</span> ${data.forehead.desc}</p>
+        <p style="margin-top:8px;font-size:0.85rem;color:#8a7a6a;">${data.forehead.detail}</p>
+      </div>`,
+      eyebrows: `<div class="feature-card">
+        <h3>✏️ 눈썹: ${data.labels.eyebrows}</h3>
+        <p><span class="score ${data.eyebrows.score >= 4 ? 'score-good' : data.eyebrows.score >= 3 ? 'score-mid' : 'score-bad'}">${'★'.repeat(data.eyebrows.score)}${'☆'.repeat(5-data.eyebrows.score)}</span> ${data.eyebrows.desc}</p>
+        <p style="margin-top:8px;font-size:0.85rem;color:#8a7a6a;">${data.eyebrows.detail}</p>
+      </div>`,
+      eyes: `<div class="feature-card">
+        <h3>👀 눈: ${data.labels.eyes}</h3>
+        <p><span class="score ${data.eyes.score >= 4 ? 'score-good' : data.eyes.score >= 3 ? 'score-mid' : 'score-bad'}">${'★'.repeat(data.eyes.score)}${'☆'.repeat(5-data.eyes.score)}</span> ${data.eyes.desc}</p>
+        <p style="margin-top:8px;font-size:0.85rem;color:#8a7a6a;">${data.eyes.detail}</p>
+      </div>`,
+      nose: `<div class="feature-card">
+        <h3>👃 코: ${data.labels.nose}</h3>
+        <p><span class="score ${data.nose.score >= 4 ? 'score-good' : data.nose.score >= 3 ? 'score-mid' : 'score-bad'}">${'★'.repeat(data.nose.score)}${'☆'.repeat(5-data.nose.score)}</span> ${data.nose.desc}</p>
+        <p style="margin-top:8px;font-size:0.85rem;color:#8a7a6a;">${data.nose.detail}</p>
+      </div>`,
+      mouth: `<div class="feature-card">
+        <h3>👄 입: ${data.labels.mouth}</h3>
+        <p><span class="score ${data.mouth.score >= 4 ? 'score-good' : data.mouth.score >= 3 ? 'score-mid' : 'score-bad'}">${'★'.repeat(data.mouth.score)}${'☆'.repeat(5-data.mouth.score)}</span> ${data.mouth.desc}</p>
+        <p style="margin-top:8px;font-size:0.85rem;color:#8a7a6a;">${data.mouth.detail}</p>
+      </div>`,
+      chin: `<div class="feature-card">
+        <h3>🤔 턱: ${data.labels.chin}</h3>
+        <p><span class="score ${data.chin.score >= 4 ? 'score-good' : data.chin.score >= 3 ? 'score-mid' : 'score-bad'}">${'★'.repeat(data.chin.score)}${'☆'.repeat(5-data.chin.score)}</span> ${data.chin.desc}</p>
+        <p style="margin-top:8px;font-size:0.85rem;color:#8a7a6a;">${data.chin.detail}</p>
+      </div>`,
+    };
+
+    for (const [key, html] of Object.entries(tabContent)) {
+      document.getElementById(`tab-${key}`).innerHTML = html;
+    }
+  }
+
+  // ---- Process image ----
+  async function processImage(img) {
+    currentImage = img;
+    status.style.display = 'block';
+    statusText.textContent = '얼굴을 감지하고 있습니다...';
+    results.style.display = 'none';
+
+    // Draw image to canvas
+    const maxW = 500;
+    const scale = Math.min(maxW / img.width, 1);
+    canvas.width = img.width * scale;
+    canvas.height = img.height * scale;
+    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+    previewContainer.style.display = 'block';
+    dropZone.style.display = 'none';
+
+    if (!faceApiReady) {
+      statusText.textContent = 'AI 모델을 불러오는 중... 잠시만 기다려주세요.';
+      await loadFaceApi();
+    }
+
+    try {
+      statusText.textContent = '얼굴 특징을 분석하고 있습니다...';
+      const detections = await faceapi.detectAllFaces(canvas, new faceapi.TinyFaceDetectorOptions({ scoreThreshold: 0.3 }))
+        .withFaceLandmarks();
+
+      if (!detections || detections.length === 0) {
+        statusText.textContent = '⚠️ 얼굴을 찾을 수 없습니다. 다른 사진을 시도해보세요.';
+        setTimeout(() => { status.style.display = 'none'; }, 3000);
+        return;
+      }
+
+      // Use the largest face
+      const det = detections.reduce((a, b) => 
+        a.detection.box.width * a.detection.box.height > b.detection.box.width * b.detection.box.height ? a : b
+      );
+
+      // Draw landmarks on canvas
+      const pts = det.landmarks.positions;
+      ctx.strokeStyle = 'rgba(201, 169, 110, 0.6)';
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      for (let i = 0; i < pts.length; i++) {
+        if (i === 0) ctx.moveTo(pts[i].x, pts[i].y);
+        else ctx.lineTo(pts[i].x, pts[i].y);
+      }
+      ctx.closePath();
+      ctx.stroke();
+
+      // Draw dots
+      ctx.fillStyle = 'rgba(201, 169, 110, 0.5)';
+      for (const p of pts) {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, 2, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      // Draw bounding box
+      const box = det.detection.box;
+      ctx.strokeStyle = 'rgba(201, 169, 110, 0.4)';
+      ctx.lineWidth = 2;
+      ctx.setLineDash([5, 5]);
+      ctx.strokeRect(box.x, box.y, box.width, box.height);
+      ctx.setLineDash([]);
+
+      statusText.textContent = '관상 분석 중...';
+      await new Promise(r => setTimeout(r, 300));
+
+      // Analyze
+      const result = analyzeFace(det.detection, det.landmarks, canvas.width, canvas.height);
+      renderResults(result);
+      status.style.display = 'none';
+
+      // Scroll to results
+      results.scrollIntoView({ behavior: 'smooth' });
+
+    } catch (e) {
+      console.error(e);
+      statusText.textContent = '⚠️ 분석 중 오류가 발생했습니다. 다시 시도해주세요.';
+      setTimeout(() => { status.style.display = 'none'; }, 3000);
+    }
+  }
+
+  // ---- Event handlers ----
+  function handleFile(file) {
+    if (!file || !file.type.startsWith('image/')) return;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onload = () => processImage(img);
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  }
+
+  selectBtn.addEventListener('click', () => fileInput.click());
+  fileInput.addEventListener('change', (e) => { if (e.target.files[0]) handleFile(e.target.files[0]); });
+
+  dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('dragover'); });
+  dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+  dropZone.addEventListener('drop', (e) => { e.preventDefault(); dropZone.classList.remove('dragover'); if (e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]); });
+
+  cameraBtn.addEventListener('click', async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' } });
+      const track = stream.getVideoTracks()[0];
+      const imgCapture = new ImageCapture(track);
+      const blob = await imgCapture.takePhoto();
+      track.stop();
+      const file = new File([blob], 'photo.jpg', { type: 'image/jpeg' });
+      handleFile(file);
+    } catch (e) {
+      alert('카메라를 사용할 수 없습니다. 사진 파일을 업로드해주세요.');
+    }
+  });
+
+  reSelectBtn.addEventListener('click', () => { resetAll(); });
+  resetBtn.addEventListener('click', () => { resetAll(); });
+
+  function resetAll() {
+    currentImage = null;
+    previewContainer.style.display = 'none';
+    dropZone.style.display = 'block';
+    results.style.display = 'none';
+    status.style.display = 'none';
+    fileInput.value = '';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // ---- Tab switching ----
+  document.querySelectorAll('.tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      document.getElementById(`tab-${tab.dataset.tab}`).classList.add('active');
+    });
+  });
+
+  // ---- Load models on startup ----
+  loadFaceApi();
+})();
+</script>
+</body>
+</html>

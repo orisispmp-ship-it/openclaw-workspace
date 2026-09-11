@@ -1,0 +1,133 @@
+{
+   "checksum": "253bef431ecf4a51654a305cf39ff5e0",
+   "roots": {
+      "bookmark_bar": {
+         "children": [
+            {
+               "date_added": "13431732245670442",
+               "date_last_used": "13433598550128925",
+               "guid": "2045dc15-4f12-450b-99cc-1547c1d20780",
+               "id": "8",
+               "meta_info": {
+                  "power_bookmark_meta": ""
+               },
+               "name": "OpenClaw Control",
+               "type": "url",
+               "url": "http://127.0.0.1:18789/chat?session=agent%3Amain%3Amain"
+            },
+            {
+               "date_added": "13431747047164545",
+               "date_last_used": "13433596394604403",
+               "guid": "4aa996ed-8cf1-4f52-b9e4-23af37223c1a",
+               "id": "9",
+               "meta_info": {
+                  "power_bookmark_meta": ""
+               },
+               "name": "Google",
+               "type": "url",
+               "url": "https://www.google.com/"
+            },
+            {
+               "date_added": "13431747056854879",
+               "date_last_used": "13433594665901537",
+               "guid": "d8290ee1-6cea-46f7-b5a8-141adc461b40",
+               "id": "10",
+               "meta_info": {
+                  "power_bookmark_meta": ""
+               },
+               "name": "NAVER",
+               "type": "url",
+               "url": "https://www.naver.com/"
+            },
+            {
+               "date_added": "13431779749954563",
+               "date_last_used": "13433594938344229",
+               "guid": "09711879-a470-4faa-bd3d-0d5ae1bdce1e",
+               "id": "11",
+               "meta_info": {
+                  "power_bookmark_meta": ""
+               },
+               "name": "동행복권",
+               "type": "url",
+               "url": "https://www.dhlottery.co.kr/"
+            },
+            {
+               "date_added": "13432242377501524",
+               "date_last_used": "13433596796531574",
+               "guid": "59bbcbc4-23e0-48d5-9345-f1544bc1f16e",
+               "id": "14",
+               "meta_info": {
+                  "power_bookmark_meta": ""
+               },
+               "name": "YouTube",
+               "type": "url",
+               "url": "https://www.youtube.com/"
+            },
+            {
+               "date_added": "13432387979878687",
+               "date_last_used": "13433425556631281",
+               "guid": "6cf30882-c001-4566-8c01-47cb3b5c619d",
+               "id": "16",
+               "meta_info": {
+                  "power_bookmark_meta": ""
+               },
+               "name": "인터넷지로",
+               "type": "url",
+               "url": "https://www.giro.or.kr/index.giro"
+            },
+            {
+               "date_added": "13432644191548806",
+               "date_last_used": "0",
+               "guid": "7438e19a-616f-4691-828f-5cf02d01b2d1",
+               "id": "18",
+               "meta_info": {
+                  "power_bookmark_meta": ""
+               },
+               "name": "힛츠",
+               "type": "url",
+               "url": "https://iamhits.hanmiglobal.com/iam/view/oauth2/sso/sign-in?p=aWRfc2NvcGVfdmFsdWU9aGl0cy5oYW5taWdsb2JhbC5jb20mbG9naW5fZG9tYWluPWhpdHMuaGFubWlnbG9iYWwuY29tJnNjb3BlPW9wZW5pZCZyZXNwb25zZV90eXBlPWNvZGUmaWRfc2NvcGU9R1cmcmVkaXJlY3RfdXJpPWh0dHBzJTNBJTJGJTJGaGl0cy5oYW5taWdsb2JhbC5jb20lMkZla3AlMkZzaWduJTJGb2lkYyUyRmd3JTJGYXV0aG9yaXplJnN0YXRlPTAxTTFCTURDMlJSQ0I2RUs2UjVLU1JHQ1o0JmZvcndhcmRfcGFyYW09MDFNMUJNREMyUUtSVlJWS1AyMUNGVlBaMVkmY2xpZW50X2lkPWdyb3Vwd2FyZS1vcmctcGM=&k=MVZKQzc2TTgxSkJEMEJEQ01KRUJBVDFLTUM=&unconnectedTbx=Y"
+            },
+            {
+               "date_added": "13433598718863466",
+               "date_last_used": "0",
+               "guid": "f8244c4b-b114-48bd-8575-be61ae5941e6",
+               "id": "19",
+               "meta_info": {
+                  "power_bookmark_meta": ""
+               },
+               "name": "쿠팡",
+               "type": "url",
+               "url": "https://www.coupang.com/"
+            }
+         ],
+         "date_added": "13288858966013890",
+         "date_last_used": "0",
+         "date_modified": "13432644191548806",
+         "guid": "0bc5d13f-2cba-5d74-951f-3f233fe6c908",
+         "id": "1",
+         "name": "북마크바",
+         "type": "folder"
+      },
+      "other": {
+         "children": [],
+         "date_added": "13288858966013892",
+         "date_last_used": "0",
+         "date_modified": "0",
+         "guid": "82b081ec-3dd3-529c-8475-ab6c344590dd",
+         "id": "5",
+         "name": "기타 북마크",
+         "type": "folder"
+      },
+      "synced": {
+         "children": [],
+         "date_added": "13288858966013893",
+         "date_last_used": "0",
+         "date_modified": "0",
+         "guid": "4cf2e351-0e85-532b-bb37-df045d8f8d0f",
+         "id": "6",
+         "name": "모바일 북마크",
+         "type": "folder"
+      }
+   },
+   "version": 1
+}

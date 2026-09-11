@@ -1,0 +1,19 @@
+{
+  "name": "calendar2027",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "canvas": "^3.2.3",
+    "pdfjs-dist": "^6.2.108",
+    "pdfkit": "^0.15.2",
+    "puppeteer-core": "^25.9.0"
+  }
+}

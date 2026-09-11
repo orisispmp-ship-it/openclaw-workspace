@@ -9,6 +9,7 @@ desktop.ini
 **/*.key
 **/*.pem
 **/secrets*
+**/*.local
 *credential*
 
 # Local runtime / scratch
@@ -16,7 +17,13 @@ tmp/
 state/
 .openclaw/
 node_modules/
+**/node_modules/
 *.log
 
-# Large local media scratch (keep curated files only)
-# media/
+# Regenerable / oversized (GitHub rejects files > 100MB)
+**/.edgetmp/
+uploads/
+**/__pycache__/
+**/dist/
+**/build/
+*.tmp

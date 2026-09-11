@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PDF Compressor 🗜️</title>
+<style>
+  /* ── Reset & Base ─────────────────────────────────────── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { font-size: 16px; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans KR",
+                 "Apple SD Gothic Neo", sans-serif;
+    background: #f0f4f8;
+    color: #1a2332;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+  }
+
+  /* ── Container ────────────────────────────────────────── */
+  .app {
+    width: 100%;
+    max-width: 680px;
+    background: #fff;
+    border-radius: 24px;
+    box-shadow: 0 12px 48px rgba(0,0,0,0.08), 0 4px 16px rgba(0,0,0,0.04);
+    padding: 2rem 2rem 2.25rem;
+    transition: box-shadow .2s;
+  }
+
+  /* ── Header ───────────────────────────────────────────── */
+  .header {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+    margin-bottom: 1.75rem;
+  }
+  .header-icon { font-size: 2rem; line-height: 1; }
+  .header h1 {
+    font-size: 1.35rem;
+    font-weight: 700;
+    letter-spacing: -.015em;
+  }
+  .header .sub {
+    font-size: .8rem;
+    color: #64748b;
+    font-weight: 400;
+    margin-top: .1rem;
+  }
+
+  /* ── Drop Zone ────────────────────────────────────────── */
+  .dropzone {
+    border: 2px dashed #cbd5e1;
+    border-radius: 16px;
+    padding: 2.75rem 1rem;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color .2s, background .2s, transform .1s;
+    position: relative;
+  }
+  .dropzone:hover { border-color: #3b82f6; background: #f8faff; }
+  .dropzone.dragover {
+    border-color: #2563eb;
+    background: #eef4ff;
+    transform: scale(1.01);
+  }
+  .dropzone.has-file {
+    border-color: #22c55e;
+    border-style: solid;
+    background: #f0fdf4;
+  }
+  .dropzone-icon { font-size: 3rem; margin-bottom: .75rem; }
+  .dropzone-title {
+    font-size: 1.05rem;
+    font-weight: 600;
+    margin-bottom: .35rem;
+  }
+  .dropzone-hint { font-size: .85rem; color: #64748b; }
+  .dropzone input[type=file] { display: none; }
+  .dropzone .file-info {
+    display: none;
+    font-size: .9rem;
+    color: #166534;
+    margin-top: .5rem;
+    word-break: break-all;
+  }
+  .dropzone.has-file .file-info { display: block; }
+  .dropzone.has-file .dropzone-icon,
+  .dropzone.has-file .dropzone-title,
+  .dropzone.has-file .dropzone-hint { display: none; }
+
+  /* ── Quality Selector ─────────────────────────────────── */
+  .quality-section {
+    margin-top: 1.25rem;
+    margin-bottom: 1rem;
+  }
+  .quality-label {
+    display: block;
+    font-size: .85rem;
+    font-weight: 600;
+    color: #334155;
+    margin-bottom: .5rem;
+  }
+  .quality-options {
+    display: flex;
+    gap: .5rem;
+    flex-wrap: wrap;
+  }
+  .quality-btn {
+    flex: 1;
+    min-width: 80px;
+    padding: .5rem .25rem;
+    border: 2px solid #e2e8f0;
+    border-radius: 10px;
+    background: #fff;
+    font-size: .8rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all .15s;
+    text-align: center;
+    color: #475569;
+  }
+  .quality-btn:hover { border-color: #93c5fd; background: #f8faff; }
+  .quality-btn.active {
+    border-color: #2563eb;
+    background: #eff6ff;
+    color: #1d4ed8;
+    box-shadow: 0 1px 4px rgba(37,99,235,.12);
+  }
+  .quality-btn .desc {
+    display: block;
+    font-size: .65rem;
+    font-weight: 400;
+    color: #94a3b8;
+    margin-top: .15rem;
+  }
+
+  /* ── Compress Button ──────────────────────────────────── */
+  .btn-compress {
+    width: 100%;
+    padding: .85rem 1.5rem;
+    margin-top: .75rem;
+    border: none;
+    border-radius: 14px;
+    background: #2563eb;
+    color: #fff;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background .15s, transform .1s, opacity .2s;
+  }
+  .btn-compress:hover:not(:disabled) { background: #1d4ed8; transform: translateY(-1px); }
+  .btn-compress:active:not(:disabled) { transform: translateY(0); }
+  .btn-compress:disabled {
+    background: #94a3b8;
+    cursor: not-allowed;
+    opacity: .65;
+  }
+  .btn-compress .spinner {
+    display: none;
+    width: 18px; height: 18px;
+    border: 2px solid rgba(255,255,255,.3);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin .6s linear infinite;
+    margin-right: .5rem;
+    vertical-align: middle;
+  }
+  .btn-compress.loading { pointer-events: none; }
+  .btn-compress.loading .spinner { display: inline-block; }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ── Progress ─────────────────────────────────────────── */
+  .progress-section {
+    margin-top: 1.25rem;
+    display: none;
+  }
+  .progress-section.active { display: block; }
+  .progress-bar-bg {
+    width: 100%;
+    height: 8px;
+    background: #e2e8f0;
+    border-radius: 99px;
+    overflow: hidden;
+  }
+  .progress-bar-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #3b82f6, #2563eb);
+    border-radius: 99px;
+    transition: width .35s ease;
+  }
+  .progress-info {
+    display: flex;
+    justify-content: space-between;
+    font-size: .82rem;
+    color: #475569;
+    margin-top: .5rem;
+  }
+  .progress-msg { color: #64748b; }
+  .progress-pct { font-variant-numeric: tabular-nums; font-weight: 600; }
+
+  /* ── Result ───────────────────────────────────────────── */
+  .result {
+    display: none;
+    margin-top: 1.25rem;
+    padding: 1.25rem;
+    background: #f8fafc;
+    border-radius: 14px;
+    border: 1px solid #e2e8f0;
+  }
+  .result.active { display: block; }
+  .result-header {
+    font-weight: 700;
+    font-size: 1rem;
+    color: #166534;
+    margin-bottom: .75rem;
+  }
+  .result-stats {
+    display: flex;
+    justify-content: space-around;
+    gap: .5rem;
+    margin-bottom: 1rem;
+    text-align: center;
+  }
+  .stat-box {
+    flex: 1;
+    padding: .65rem .35rem;
+    background: #fff;
+    border-radius: 10px;
+    border: 1px solid #e2e8f0;
+  }
+  .stat-label {
+    font-size: .7rem;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+    font-weight: 600;
+  }
+  .stat-value { font-size: 1.1rem; font-weight: 700; color: #1e293b; margin-top: .15rem; }
+  .stat-value.saved { color: #16a34a; }
+  .stat-value.worse { color: #dc2626; }
+  .result-actions {
+    display: flex;
+    gap: .5rem;
+  }
+  .btn-download {
+    flex: 1;
+    padding: .65rem 1rem;
+    border: none;
+    border-radius: 10px;
+    background: #16a34a;
+    color: #fff;
+    font-size: .9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background .15s;
+    text-decoration: none;
+    text-align: center;
+  }
+  .btn-download:hover { background: #15803d; }
+  .btn-reset {
+    padding: .65rem 1rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    background: #fff;
+    color: #475569;
+    font-size: .9rem;
+    cursor: pointer;
+    transition: background .15s;
+    font-weight: 500;
+  }
+  .btn-reset:hover { background: #f1f5f9; }
+
+  /* ── Error ────────────────────────────────────────────── */
+  .error {
+    display: none;
+    margin-top: 1rem;
+    padding: .85rem 1rem;
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    border-radius: 10px;
+    color: #991b1b;
+    font-size: .88rem;
+  }
+  .error.active { display: block; }
+
+  /* ── Footer ───────────────────────────────────────────── */
+  .footer {
+    margin-top: 1rem;
+    font-size: .72rem;
+    color: #94a3b8;
+    text-align: center;
+  }
+
+  /* ── Responsive ────────────────────────────────────────── */
+  @media (max-width: 480px) {
+    .app { padding: 1.25rem; border-radius: 16px; }
+    .dropzone { padding: 1.75rem .75rem; }
+    .quality-btn { min-width: 60px; font-size: .72rem; }
+    .result-stats { flex-wrap: wrap; }
+  }
+</style>
+</head>
+<body>
+
+<div class="app">
+  <!-- Header -->
+  <div class="header">
+    <span class="header-icon">🗜️</span>
+    <div>
+      <h1>PDF Compressor</h1>
+      <div class="sub">용량은 줄이고, 화질은 최대한 유지</div>
+    </div>
+  </div>
+
+  <!-- Drop Zone -->
+  <div class="dropzone" id="dropzone">
+    <div class="dropzone-icon">📄</div>
+    <div class="dropzone-title">PDF 파일을 끌어오거나 클릭</div>
+    <div class="dropzone-hint">최대 200MB · 처리 후 자동 삭제</div>
+    <div class="file-info" id="fileInfo"></div>
+    <input type="file" id="fileInput" accept=".pdf" />
+  </div>
+
+  <!-- Quality -->
+  <div class="quality-section">
+    <div class="quality-label">압축 품질</div>
+    <div class="quality-options" id="qualityOptions">
+      <button class="quality-btn" data-value="high">
+        높은 화질
+        <span class="desc">약간 압축</span>
+      </button>
+      <button class="quality-btn active" data-value="medium">
+        ⭐ 균형
+        <span class="desc">권장</span>
+      </button>
+      <button class="quality-btn" data-value="low">
+        작은 용량
+        <span class="desc">화질 저하 있음</span>
+      </button>
+      <button class="quality-btn" data-value="verylow">
+        최대 압축
+        <span class="desc">화질 저하</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Compress Button -->
+  <button class="btn-compress" id="btnCompress" disabled>
+    <span class="spinner"></span>
+    <span class="btn-text">압축 시작</span>
+  </button>
+
+  <!-- Progress -->
+  <div class="progress-section" id="progressSection">
+    <div class="progress-bar-bg">
+      <div class="progress-bar-fill" id="progressFill"></div>
+    </div>
+    <div class="progress-info">
+      <span class="progress-msg" id="progressMsg">처리 중...</span>
+      <span class="progress-pct" id="progressPct">0%</span>
+    </div>
+  </div>
+
+  <!-- Result -->
+  <div class="result" id="result">
+    <div class="result-header">✅ 압축 완료!</div>
+    <div class="result-stats">
+      <div class="stat-box">
+        <div class="stat-label">원본</div>
+        <div class="stat-value" id="origSize">-</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-label">압축 후</div>
+        <div class="stat-value" id="newSize" style="color:#16a34a">-</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-label">절약</div>
+        <div class="stat-value saved" id="savedPct">-</div>
+      </div>
+    </div>
+    <div class="result-actions">
+      <a class="btn-download" id="downloadLink" download>⬇ 다운로드</a>
+      <button class="btn-reset" id="btnReset">다시</button>
+    </div>
+  </div>
+
+  <!-- Error -->
+  <div class="error" id="errorBox">
+    <span id="errorMsg"></span>
+  </div>
+
+  <div class="footer">
+    로컬에서만 처리 — 파일이 서버로 전송되지 않습니다
+  </div>
+</div>
+
+<script>
+(function() {
+  // ── DOM refs ──────────────────────────────────────────────
+  const dropzone   = document.getElementById('dropzone');
+  const fileInput  = document.getElementById('fileInput');
+  const fileInfo   = document.getElementById('fileInfo');
+  const btnCompress= document.getElementById('btnCompress');
+  const btnText    = btnCompress.querySelector('.btn-text');
+  const qualityOpts= document.querySelectorAll('.quality-btn');
+  const progSec    = document.getElementById('progressSection');
+  const progFill   = document.getElementById('progressFill');
+  const progMsg    = document.getElementById('progressMsg');
+  const progPct    = document.getElementById('progressPct');
+  const result     = document.getElementById('result');
+  const origSize   = document.getElementById('origSize');
+  const newSize    = document.getElementById('newSize');
+  const savedPct   = document.getElementById('savedPct');
+  const downloadLk = document.getElementById('downloadLink');
+  const btnReset   = document.getElementById('btnReset');
+  const errorBox   = document.getElementById('errorBox');
+  const errorMsg   = document.getElementById('errorMsg');
+
+  let selectedFile = null;
+  let selectedQuality = 'medium';
+  let currentJobId = null;
+  let pollTimer = null;
+
+  // ── Helpers ─────────────────────────────────────────────
+  function humanSize(bytes) {
+    if (bytes < 1024) return bytes + ' B';
+    if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
+    return (bytes / 1048576).toFixed(1) + ' MB';
+  }
+
+  function setError(msg) {
+    errorBox.classList.add('active');
+    errorMsg.textContent = msg;
+  }
+
+  function hideError() { errorBox.classList.remove('active'); }
+
+  function resetUI() {
+    selectedFile = null;
+    currentJobId = null;
+    if (pollTimer) { clearInterval(pollTimer); pollTimer = null; }
+    dropzone.classList.remove('has-file');
+    fileInfo.textContent = '';
+    btnCompress.disabled = true;
+    btnCompress.classList.remove('loading');
+    btnText.textContent = '압축 시작';
+    progSec.classList.remove('active');
+    progFill.style.width = '0%';
+    progPct.textContent = '0%';
+    result.classList.remove('active');
+    hideError();
+    fileInput.value = '';
+  }
+
+  // ── File selection ──────────────────────────────────────
+  function onFileSelected(f) {
+    hideError();
+    if (!f || f.type !== 'application/pdf') {
+      setError('PDF 파일만 선택할 수 있습니다.');
+      return;
+    }
+    if (f.size > 200 * 1024 * 1024) {
+      setError('파일이 너무 큽니다. 200MB 이하의 PDF만 가능합니다.');
+      return;
+    }
+    selectedFile = f;
+    dropzone.classList.add('has-file');
+    fileInfo.textContent = `📎 ${f.name}  ·  ${humanSize(f.size)}`;
+    btnCompress.disabled = false;
+    btnText.textContent = '압축 시작';
+  }
+
+  dropzone.addEventListener('click', () => fileInput.click());
+  fileInput.addEventListener('change', () => {
+    if (fileInput.files.length) onFileSelected(fileInput.files[0]);
+  });
+
+  // Drag & Drop
+  dropzone.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    dropzone.classList.add('dragover');
+  });
+  dropzone.addEventListener('dragleave', () => {
+    dropzone.classList.remove('dragover');
+  });
+  dropzone.addEventListener('drop', (e) => {
+    e.preventDefault();
+    dropzone.classList.remove('dragover');
+    if (e.dataTransfer.files.length) onFileSelected(e.dataTransfer.files[0]);
+  });
+
+  // ── Quality selector ────────────────────────────────────
+  qualityOpts.forEach(btn => {
+    btn.addEventListener('click', () => {
+      qualityOpts.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      selectedQuality = btn.dataset.value;
+    });
+  });
+
+  // ── Compress ────────────────────────────────────────────
+  btnCompress.addEventListener('click', async () => {
+    if (!selectedFile || btnCompress.classList.contains('loading')) return;
+    hideError();
+    result.classList.remove('active');
+    btnCompress.disabled = true;
+    btnCompress.classList.add('loading');
+    btnText.textContent = '업로드 중...';
+
+    // Upload
+    const form = new FormData();
+    form.append('file', selectedFile);
+    form.append('quality', selectedQuality);
+
+    let jobId;
+    try {
+      const resp = await fetch('/api/upload', { method: 'POST', body: form });
+      const data = await resp.json();
+      if (data.error) { throw new Error(data.error); }
+      jobId = data.job_id;
+      currentJobId = jobId;
+    } catch (err) {
+      btnCompress.classList.remove('loading');
+      btnCompress.disabled = !!(selectedFile);  // re-enable if file exists
+      btnText.textContent = '압축 시작';
+      setError('업로드 실패: ' + err.message);
+      return;
+    }
+
+    // Progress polling
+    btnText.textContent = '압축 중...';
+    progSec.classList.add('active');
+    progMsg.textContent = '처리 준비 중...';
+
+    pollTimer = setInterval(async () => {
+      try {
+        const r = await fetch('/api/status/' + jobId);
+        const j = await r.json();
+        if (j.error) { throw new Error(j.error); }
+
+        progFill.style.width = (j.progress || 0) + '%';
+        progPct.textContent = (j.progress || 0) + '%';
+        progMsg.textContent = j.message || '처리 중...';
+
+        if (j.status === 'done') {
+          clearInterval(pollTimer); pollTimer = null;
+          finishCompress(jobId, j);
+        } else if (j.status === 'error') {
+          clearInterval(pollTimer); pollTimer = null;
+          failCompress(j.message || '압축 중 오류 발생');
+        }
+      } catch (e) {
+        // network glitch — just keep polling
+      }
+    }, 400);
+  });
+
+  function finishCompress(jobId, data) {
+    btnCompress.classList.remove('loading');
+    progSec.classList.remove('active');
+    result.classList.add('active');
+
+    origSize.textContent = data.orig_size_hr || '-';
+    newSize.textContent = data.output_size_hr || '-';
+
+    const ratio = data.ratio || 0;
+    if (ratio > 0) {
+      savedPct.textContent = `-${ratio}%`;
+      savedPct.className = 'stat-value saved';
+    } else {
+      savedPct.textContent = `+${Math.abs(ratio)}%`;
+      savedPct.className = 'stat-value worse';
+    }
+
+    downloadLk.href = '/api/download/' + jobId;
+    downloadLk.download = data.orig_name ? data.orig_name.replace('.pdf', '_compressed.pdf') : 'compressed.pdf';
+
+    // Re-enable reset state
+    btnCompress.disabled = false;
+    btnText.textContent = '압축 시작';
+    currentJobId = null;
+  }
+
+  function failCompress(msg) {
+    btnCompress.classList.remove('loading');
+    progSec.classList.remove('active');
+    btnCompress.disabled = !!(selectedFile);
+    btnText.textContent = '압축 시작';
+    setError(msg);
+  }
+
+  // ── Reset ───────────────────────────────────────────────
+  btnReset.addEventListener('click', () => {
+    if (currentJobId) {
+      fetch('/api/clear/' + currentJobId, { method: 'POST' }).catch(() => {});
+    }
+    resetUI();
+  });
+
+  // Clean up on page unload
+  window.addEventListener('beforeunload', () => {
+    if (currentJobId) {
+      navigator.sendBeacon('/api/clear/' + currentJobId, '{}');
+    }
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,220 @@
+<!doctype html>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>손자병법 × 육도 — 인생컨설팅 앱 구조도</title>
+<style>
+  :root {
+    color-scheme: light dark;
+    --bg: #f8fafc;
+    --fg: #172033;
+    --muted: #5b6475;
+    --line: #64748b;
+    --neutral: #e2e8f0;
+    --input: #bfdbfe;
+    --process: #c7d2fe;
+    --storage: #99f6e4;
+    --external: #fde68a;
+    --risk: #fecaca;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0f172a;
+      --fg: #e5e7eb;
+      --muted: #a3adbd;
+      --line: #94a3b8;
+      --neutral: #334155;
+      --input: #1d4ed8;
+      --process: #4338ca;
+      --storage: #0f766e;
+      --external: #92400e;
+      --risk: #991b1b;
+    }
+  }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--fg);
+    font:
+      14px/1.4 ui-sans-serif,
+      system-ui,
+      -apple-system,
+      BlinkMacSystemFont,
+      "Segoe UI",
+      sans-serif;
+  }
+  main {
+    max-width: 980px;
+    margin: 32px auto;
+    padding: 0 20px;
+  }
+  svg {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+  .title {
+    font-size: 20px;
+    font-weight: 650;
+    fill: var(--fg);
+  }
+  .label {
+    font-size: 14px;
+    font-weight: 600;
+    fill: var(--fg);
+  }
+  .small {
+    font-size: 12px;
+    fill: var(--muted);
+  }
+  .node {
+    stroke: var(--line);
+    stroke-width: 1;
+  }
+  .neutral {
+    fill: var(--neutral);
+  }
+  .input {
+    fill: var(--input);
+  }
+  .process {
+    fill: var(--process);
+  }
+  .storage {
+    fill: var(--storage);
+  }
+  .external {
+    fill: var(--external);
+  }
+  .risk {
+    fill: var(--risk);
+  }
+  .edge {
+    stroke: var(--line);
+    stroke-width: 1.5;
+    fill: none;
+  }
+  .edge-dash {
+    stroke: var(--line);
+    stroke-width: 1.5;
+    fill: none;
+    stroke-dasharray: 6 5;
+  }
+  .zone {
+    fill: none;
+    stroke: var(--line);
+    stroke-width: 1;
+    stroke-dasharray: 6 5;
+    opacity: 0.8;
+  }
+</style>
+<main>
+  <svg viewBox="0 0 940 850" role="img" aria-label="손자병법과 육도의 원리를 이용한 인생컨설팅 앱 구조도">
+    <defs>
+      <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+        <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--line)" />
+      </marker>
+    </defs>
+
+    <text x="470" y="26" text-anchor="middle" class="title">손자병법 × 육도 — 인생컨설팅 앱 구조도</text>
+
+    <!-- 순환 피드백 경로 (회고 → 진단) -->
+    <path class="edge-dash" marker-end="url(#arrow)" d="M 370 750 L 34 750 L 34 65 L 366 65" />
+
+    <!-- 1단계 진단 → 서브노드 3개 -->
+    <path class="edge" marker-end="url(#arrow)" d="M 420 94 L 165 126" />
+    <path class="edge" marker-end="url(#arrow)" d="M 470 94 L 470 126" />
+    <path class="edge" marker-end="url(#arrow)" d="M 520 94 L 775 126" />
+
+    <!-- 판단 게이트 → 분기 -->
+    <path class="edge" marker-end="url(#arrow)" d="M 370 269 L 165 264" />
+    <path class="edge" marker-end="url(#arrow)" d="M 570 269 L 775 264" />
+    <path class="edge" marker-end="url(#arrow)" d="M 470 298 L 470 386" />
+
+    <!-- 전략 수립 → 서브노드 2개 -->
+    <path class="edge" marker-end="url(#arrow)" d="M 420 448 L 210 476" />
+    <path class="edge" marker-end="url(#arrow)" d="M 520 448 L 730 476" />
+
+    <!-- 실행 → 36계 카드 -->
+    <path class="edge" marker-end="url(#arrow)" d="M 570 609 L 730 606" />
+
+    <!-- 회고 → 피드백 카드 -->
+    <path class="edge" marker-end="url(#arrow)" d="M 420 749 L 210 746" />
+
+    <!-- ===== 1. 진단 ===== -->
+    <rect class="node input" x="370" y="36" width="200" height="58" rx="8" />
+    <text x="470" y="63" text-anchor="middle" class="label">1. 진단 — 지피지기</text>
+    <text x="470" y="82" text-anchor="middle" class="small">손자: "적을 알고 나를 알면 백 번 싸워도 위태롭지 않다"</text>
+
+    <rect class="node neutral" x="60" y="130" width="210" height="50" rx="8" />
+    <text x="165" y="151" text-anchor="middle" class="label">나 (강점 · 약점)</text>
+    <text x="165" y="170" text-anchor="middle" class="small">육도 인재론 — 자기 객관화</text>
+
+    <rect class="node neutral" x="365" y="130" width="210" height="50" rx="8" />
+    <text x="470" y="151" text-anchor="middle" class="label">상황 (환경 · 경쟁 · 기회)</text>
+    <text x="470" y="170" text-anchor="middle" class="small">손자 오사 — 도·천·지·장·법</text>
+
+    <rect class="node neutral" x="670" y="130" width="210" height="50" rx="8" />
+    <text x="775" y="151" text-anchor="middle" class="label">타이밍 (천시 · 지리)</text>
+    <text x="775" y="170" text-anchor="middle" class="small">시의 판단 — 지금인가, 나중인가</text>
+
+    <!-- ===== 2. 판단 게이트 ===== -->
+    <rect class="node risk" x="370" y="240" width="200" height="58" rx="8" />
+    <text x="470" y="267" text-anchor="middle" class="label">2. 판단 게이트</text>
+    <text x="470" y="286" text-anchor="middle" class="small">"이길 수 있으면 싸우고, 이길 수 없으면 피한다"</text>
+
+    <rect class="node neutral" x="60" y="240" width="210" height="50" rx="8" />
+    <text x="165" y="261" text-anchor="middle" class="label">대기 · 관망</text>
+    <text x="165" y="280" text-anchor="middle" class="small">승산 없음 — 자원 아끼기</text>
+
+    <rect class="node neutral" x="670" y="240" width="210" height="50" rx="8" />
+    <text x="775" y="261" text-anchor="middle" class="label">후퇴 · 방향 전환</text>
+    <text x="775" y="280" text-anchor="middle" class="small">36계 주위상책 — 물러서는 것도 전략</text>
+
+    <!-- ===== 3. 전략 수립 ===== -->
+    <rect class="node process" x="370" y="390" width="200" height="58" rx="8" />
+    <text x="470" y="417" text-anchor="middle" class="label">3. 전략 수립 — 선계후전</text>
+    <text x="470" y="436" text-anchor="middle" class="small">육도: 계산이 선 다음에 싸운다</text>
+
+    <rect class="node neutral" x="100" y="480" width="220" height="50" rx="8" />
+    <text x="210" y="501" text-anchor="middle" class="label">정 · 기 이원 전략</text>
+    <text x="210" y="520" text-anchor="middle" class="small">손자: 정공법(본질) + 기습(우회)</text>
+
+    <rect class="node neutral" x="620" y="480" width="220" height="50" rx="8" />
+    <text x="730" y="501" text-anchor="middle" class="label">6축 인생 설계</text>
+    <text x="730" y="520" text-anchor="middle" class="small">육도 6부 → 학습·재무·관계·건강·전략·실행</text>
+
+    <!-- ===== 4. 실행 ===== -->
+    <rect class="node process" x="370" y="580" width="200" height="58" rx="8" />
+    <text x="470" y="607" text-anchor="middle" class="label">4. 실행 — 기정지변</text>
+    <text x="470" y="626" text-anchor="middle" class="small">손자: "정과 기의 변화는 끝이 없다"</text>
+
+    <rect class="node external" x="620" y="580" width="220" height="50" rx="8" />
+    <text x="730" y="601" text-anchor="middle" class="label">상황별 대응 카드</text>
+    <text x="730" y="620" text-anchor="middle" class="small">36계 — 지금의 상황에 맞는 계책 추천</text>
+
+    <!-- ===== 5. 회고 ===== -->
+    <rect class="node storage" x="370" y="720" width="200" height="58" rx="8" />
+    <text x="470" y="747" text-anchor="middle" class="label">5. 회고 — 이적위동</text>
+    <text x="470" y="766" text-anchor="middle" class="small">손자: 상황이 변하면 계획도 변한다</text>
+
+    <rect class="node neutral" x="100" y="720" width="220" height="50" rx="8" />
+    <text x="210" y="741" text-anchor="middle" class="label">피드백 · 데이터 축적</text>
+    <text x="210" y="760" text-anchor="middle" class="small">판단의 기록 → 다음 진단의 입력</text>
+
+    <!-- 범례 -->
+    <g transform="translate(0, 810)">
+      <rect class="node input" x="40" y="0" width="18" height="18" rx="3" />
+      <text x="64" y="14" class="small">진단 (사용자 입력)</text>
+      <rect class="node risk" x="210" y="0" width="18" height="18" rx="3" />
+      <text x="234" y="14" class="small">판단 게이트</text>
+      <rect class="node process" x="370" y="0" width="18" height="18" rx="3" />
+      <text x="394" y="14" class="small">전략 · 실행</text>
+      <rect class="node storage" x="510" y="0" width="18" height="18" rx="3" />
+      <text x="534" y="14" class="small">회고 · 기록</text>
+      <rect class="node external" x="640" y="0" width="18" height="18" rx="3" />
+      <text x="664" y="14" class="small">상황 요소</text>
+      <rect class="node neutral" x="770" y="0" width="18" height="18" rx="3" />
+      <text x="794" y="14" class="small">보조 · 분기</text>
+    </g>
+  </svg>
+</main>

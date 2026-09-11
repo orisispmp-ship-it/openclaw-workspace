@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>2027년 달력 (A4 가로, 1장)</title>
+<style>
+  @page { size: A4 landscape; margin: 5mm; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    width: 287mm; height: 200mm;
+    font-family: 'Malgun Gothic', '맑은 고딕', sans-serif;
+    color: #222;
+    box-sizing: border-box;
+    display: flex; flex-direction: column;
+  }
+  .title {
+    font-size: 15pt; font-weight: 700; text-align: center;
+    padding-bottom: 2mm; letter-spacing: 3px;
+  }
+  .container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(3, auto);
+    gap: 2.2mm;
+    width: 287mm;
+    flex: 1;
+    box-sizing: border-box;
+  }
+  /* 공휴일/국경일 컬러 (빨강) — 유일한 컬러 */
+  .red { color: #d00000; font-weight: 700; }
+  .dow.dow-r { color: #d00000; }
+
+  .month {
+    border: 0.4px solid #b0b0b0;
+    padding: 1.6mm;
+    display: flex; flex-direction: column;
+    box-sizing: border-box;
+  }
+  .m-title {
+    font-size: 9pt; font-weight: 700; text-align: center;
+    padding-bottom: 1mm; margin-bottom: 1mm;
+    border-bottom: 0.4px solid #b0b0b0;
+    letter-spacing: 0.5px;
+  }
+  .cal {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    flex: 1;
+  }
+  .dow {
+    font-size: 6pt; text-align: center; font-weight: 700;
+    padding: 0.6mm 0; color: #444;
+  }
+  .d {
+    font-size: 7.5pt; text-align: center;
+    line-height: 4.4mm; height: 4.4mm;
+    box-sizing: border-box;
+  }
+  .d.empty { visibility: hidden; }
+  .d.sun { color: #d00000; }      /* 일요일: 빨간색 */
+  .d.sat { color: #555; }         /* 토요일: 최소화 위해 회색 */
+  /* 공휴일은 항상 빨간색(굵게) — 주말이어도 유지 */
+  .d.sun.red, .d.sat.red, .d.red { color: #d00000; font-weight: 700; }
+</style>
+</head>
+<body>
+<div class="title">2027년 달력</div>
+<div class="container" id="root"></div>
+
+<script>
+const HOLIDAYS = {
+  '1,1':'신정','2,6':'설 연휴','2,7':'설날','2,8':'설 연휴','2,9':'대체공휴일',
+  '3,1':'삼일절',
+  '5,1':'노동절','5,3':'대체공휴일','5,5':'어린이날','5,13':'부처님오신날',
+  '6,6':'현충일',
+  '7,17':'제헌절','7,19':'대체공휴일',
+  '8,15':'광복절','8,16':'대체공휴일',
+  '9,14':'추석 연휴','9,15':'추석','9,16':'추석 연휴',
+  '10,3':'개천절','10,4':'대체공휴일','10,9':'한글날','10,11':'대체공휴일',
+  '12,25':'성탄절','12,27':'대체공휴일'
+};
+const DOW = ['일','월','화','수','목','금','토'];
+const YEAR = 2027;
+
+function isHoliday(m, d) { return HOLIDAYS[`${m},${d}`] !== undefined; }
+
+const root = document.getElementById('root');
+for (let m = 1; m <= 12; m++) {
+  const mon = document.createElement('div');
+  mon.className = 'month';
+
+  const title = document.createElement('div');
+  title.className = 'm-title';
+  title.textContent = `${YEAR}년 ${m}월`;
+  mon.appendChild(title);
+
+  const cal = document.createElement('div');
+  cal.className = 'cal';
+
+  // 요일 헤더
+  for (let d = 0; d < 7; d++) {
+    const dw = document.createElement('div');
+    dw.className = (d === 0) ? 'dow dow-r' : 'dow';
+    dw.textContent = DOW[d];
+    cal.appendChild(dw);
+  }
+
+  const firstDay = new Date(YEAR, m - 1, 1).getDay();
+  const daysInMonth = new Date(YEAR, m, 0).getDate();
+
+  // 앞 빈 칸
+  for (let i = 0; i < firstDay; i++) {
+    const e = document.createElement('div');
+    e.className = 'd empty';
+    cal.appendChild(e);
+  }
+  // 날짜
+  for (let d = 1; d <= daysInMonth; d++) {
+    const cell = document.createElement('div');
+    const dow = new Date(YEAR, m - 1, d).getDay();
+    let cls = 'd';
+    if (dow === 0) cls += ' sun';
+    else if (dow === 6) cls += ' sat';
+    if (isHoliday(m, d)) cls += ' red';
+    cell.className = cls;
+    const num = document.createElement('span');
+    num.textContent = d;
+    cell.appendChild(num);
+    cal.appendChild(cell);
+  }
+
+  mon.appendChild(cal);
+  root.appendChild(mon);
+}
+</script>
+</body>
+</html>

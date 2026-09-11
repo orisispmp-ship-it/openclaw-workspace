@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>감리원 평가</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#1a1a2e;color:#ddd;font-family:sans-serif;padding:20px}
+.wrap{max-width:800px;margin:0 auto}
+
+/* Step indicator */
+.steps{display:flex;gap:8px;margin-bottom:20px;justify-content:center}
+.step{background:#0d0d1a;border:1px solid #333;border-radius:20px;padding:6px 16px;font-size:12px;color:#555}
+.step.on{background:#ffcc00;color:#1a1a2e;border-color:#ffcc00;font-weight:bold}
+.step.done{background:#1a3a1a;border-color:#2e7d32;color:#4caf50}
+
+h1{font-size:22px;color:#ffcc00;margin-bottom:4px;text-align:center}
+.sub{color:#888;font-size:13px;margin-bottom:8px;text-align:center}
+.hint{color:#555;font-size:12px;margin-bottom:16px;text-align:center}
+
+/* Step 1: Upload */
+#step1{display:block}
+.drop{border:2px dashed #444;border-radius:12px;padding:30px 20px;text-align:center;cursor:pointer;background:#0d0d1a;margin-bottom:12px}
+.drop:hover{border-color:#ffcc00}
+.drop.done{border-color:#2e7d32;background:#0d1a0d}
+.drop .ico{font-size:32px}
+.drop .fi{display:none;color:#2e7d32;font-size:13px;margin-top:6px}
+.drop.done .fi{display:block}
+.drop.done .ph{display:none}
+#fileInput{display:none}
+
+.pv{background:#0d0d1a;border:1px solid #333;border-radius:8px;padding:12px;margin-bottom:12px;max-height:200px;overflow:auto;font-size:11px;white-space:pre-wrap;display:none}
+.pv.on{display:block}
+
+.actions{display:flex;gap:10px;margin-top:12px}
+.actions button{padding:12px 24px;border:none;border-radius:8px;font-size:14px;cursor:pointer;font-weight:bold}
+#evalBtn{background:#ffcc00;color:#1a1a2e}
+#evalBtn:hover{background:#ffd633}
+#resetBtn{background:#333;color:#ccc}
+#resetBtn:hover{background:#444}
+#confirmBtn{background:#4caf50;color:#fff}
+#confirmBtn:hover{background:#5cbf60}
+#recalcBtn{background:#2196f3;color:#fff}
+#recalcBtn:hover{background:#42a5f5}
+#backBtn{background:#555;color:#ccc}
+#backBtn:hover{background:#666}
+button:disabled{opacity:0.4;cursor:not-allowed}
+
+.msg{color:#888;font-size:12px;text-align:center;margin-top:12px;min-height:20px}
+.msg.ok{color:#2e7d32}
+.msg.err{color:#e53935}
+
+/* Step 2: Review */
+#step2{display:none}
+.item{border:1px solid #333;border-radius:10px;padding:16px;margin-bottom:12px;background:#0d0d1a}
+.item.ambi{border-color:#ff9800;background:#1a1500}
+.item.ambi .badge{display:inline-block;background:#ff9800;color:#000;font-size:10px;padding:2px 8px;border-radius:10px;font-weight:bold;margin-left:8px}
+.item h3{font-size:15px;color:#ffcc00;margin-bottom:6px}
+.item .max{color:#666;font-size:11px}
+.item .ev{background:#111122;border-radius:6px;padding:8px;margin:6px 0;font-size:12px;color:#aaa;border-left:3px solid #444}
+.item .ev b{color:#ddd}
+.item .re{font-size:12px;color:#888;margin:4px 0}
+.item .re b{color:#bbb}
+.item label{font-size:13px;color:#ddd;display:block;margin:8px 0 4px}
+.item select{padding:6px 10px;border-radius:6px;border:1px solid #555;background:#222;color:#ddd;font-size:13px;width:100%;max-width:300px}
+.item select:focus{border-color:#ffcc00;outline:none}
+.item .sc{font-size:18px;font-weight:bold;text-align:right;margin-top:-28px}
+.item .sc .pts{color:#ffcc00}
+.item .sc .pts.green{color:#4caf50}
+
+/* Sub-options (가점 checkboxes) */
+.subopts{margin-top:8px}
+.subopt{display:flex;align-items:center;gap:8px;padding:6px 0;border-top:1px solid #222}
+.subopt:first-child{border-top:none}
+.subopt input[type="checkbox"]{width:16px;height:16px;accent-color:#ffcc00;cursor:pointer}
+.subopt label{font-size:13px;cursor:pointer;margin:0;flex:1}
+.subopt .sc2{font-size:13px;font-weight:bold;color:#ffcc00}
+.subopt .rs{font-size:11px;color:#666;flex:1}
+
+/* Step 3: Result */
+#step3{display:none}
+.result-box{background:#0a0a14;border:1px solid #444;border-radius:12px;padding:20px;margin-top:12px}
+.result-box table{width:100%;border-collapse:collapse;margin:10px 0}
+.result-box th,.result-box td{border:1px solid #333;padding:8px 10px;text-align:center;font-size:14px}
+.result-box th{background:#1a1a2e;color:#ffcc00}
+.big{font-size:28px;font-weight:bold;text-align:center;padding:16px;margin-top:8px}
+.pass{color:#4caf50}
+.fail{color:#e53935}
+.summary{font-size:12px;color:#888;text-align:center;margin-top:6px}
+
+.loading{text-align:center;padding:40px;color:#888;display:none}
+.loading .spinner{width:40px;height:40px;border:4px solid #333;border-top-color:#ffcc00;border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 12px}
+@keyframes spin{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="steps">
+  <div class="step on" id="s1">1. 파일 업로드</div>
+  <div class="step" id="s2">2. 항목 검토</div>
+  <div class="step" id="s3">3. 최종 평가</div>
+</div>
+
+<h1>📋 감리원 평가</h1>
+<div class="sub">P4L 생산시설 CM CV Check List</div>
+
+<!-- ====== STEP 1: UPLOAD ====== -->
+<div id="step1">
+  <div class="drop" id="dropZone">
+    <div class="ph"><div class="ico">📂</div><div>이력서 파일을 드래그 또는 클릭</div></div>
+    <div class="fi" id="fileInfo"></div>
+  </div>
+  <input type="file" id="fileInput" accept=".pdf,.docx,.xlsx">
+  <div class="pv" id="preview"></div>
+  <div class="actions">
+    <button id="evalBtn">🤖 AI 분석 시작</button>
+    <button id="resetBtn">🗑️ 초기화</button>
+  </div>
+  <div class="msg" id="status"></div>
+</div>
+
+<!-- ====== STEP 2: REVIEW ITEMS ====== -->
+<div id="step2">
+  <div class="loading" id="loading2">
+    <div class="spinner"></div>
+    <div>AI 분석 중...</div>
+  </div>
+  <div id="reviewContent" style="display:none">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+      <span style="font-size:13px;color:#888">⚠️ 노란색 항목은 AI 판단이 애매한 항목입니다. 확인 후 선택해주세요.</span>
+      <span id="autoTotal" style="font-size:16px;font-weight:bold;color:#ffcc00"></span>
+    </div>
+    <div id="itemsContainer"></div>
+    <div class="actions">
+      <button id="backBtn">← 뒤로</button>
+      <button id="confirmBtn" style="margin-left:auto">✅ 선택 확정 → 최종 평가</button>
+    </div>
+  </div>
+</div>
+
+<!-- ====== STEP 3: FINAL RESULT ====== -->
+<div id="step3">
+  <div class="result-box">
+    <table>
+      <tr><th>항목</th><th>만점</th><th>선택</th><th>점수</th><th>근거</th></tr>
+      <tbody id="resultBody"></tbody>
+    </table>
+    <div class="summary">70점 이상 합격</div>
+    <div class="big" id="finalTotal"></div>
+  </div>
+  <div style="text-align:center;margin-top:12px;font-size:12px;color:#666">
+    항목을 수정하려면 드롭다운/체크박스를 변경하고 [재계산]을 누르세요
+  </div>
+  <div id="editArea" style="margin-top:12px"></div>
+  <div class="actions" style="justify-content:center">
+    <button id="backBtn2">← 항목 검토로</button>
+    <button id="recalcBtn">🔄 재계산</button>
+    <button id="resetBtn2">🗑️ 처음으로</button>
+  </div>
+</div>
+
+</div>
+
+<!-- Libs -->
+<script>
+var ps=document.createElement('script');ps.src='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';document.head.appendChild(ps);
+var ms=document.createElement('script');ms.src='https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js';document.head.appendChild(ms);
+var xs=document.createElement('script');xs.src='https://cdn.sheetjs.com/xlsx-0.20.0/package/dist/xlsx.full.min.js';document.head.appendChild(xs);
+</script>
+
+<script>
+// State
+var resumeText = '';
+var resumeName = '';
+var analysisData = null;
+var serverUrl = 'http://127.0.0.1:19789';
+
+function showStep(n) {
+  document.getElementById('step1').style.display = n === 1 ? 'block' : 'none';
+  document.getElementById('step2').style.display = n === 2 ? 'block' : 'none';
+  document.getElementById('step3').style.display = n === 3 ? 'block' : 'none';
+  for (var i = 1; i <= 3; i++) {
+    var el = document.getElementById('s' + i);
+    el.className = 'step';
+    if (i < n) el.classList.add('done');
+    if (i === n) el.classList.add('on');
+  }
+}
+
+// ====== UPLOAD LOGIC ======
+var dz = document.getElementById('dropZone');
+var fi = document.getElementById('fileInput');
+var pv = document.getElementById('preview');
+var finfo = document.getElementById('fileInfo');
+
+dz.onclick = function() { fi.click(); };
+dz.ondragover = function(e) { e.preventDefault(); dz.style.borderColor = '#ffcc00'; };
+dz.ondragleave = function() { dz.style.borderColor = ''; };
+dz.ondrop = function(e) {
+  e.preventDefault(); dz.style.borderColor = '';
+  if (e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]);
+};
+fi.onchange = function() { if (fi.files[0]) handleFile(fi.files[0]); };
+
+function handleFile(file) {
+  var ext = file.name.split('.').pop().toLowerCase();
+  if (!['pdf','docx','xlsx'].includes(ext)) {
+    statusMsg('❌ PDF / DOCX / XLSX만 지원합니다', 'err'); return;
+  }
+  dz.classList.add('done');
+  finfo.textContent = '📎 ' + file.name + ' (' + (file.size/1024).toFixed(1) + ' KB)';
+  pv.classList.add('on');
+  pv.textContent = '⏳ 파일 읽는 중...';
+  var reader = new FileReader();
+  reader.onload = async function(e) {
+    try {
+      var ab = e.target.result;
+      var text = '';
+      if (ext === 'pdf') {
+        await waitForLib('pdfjsLib');
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+        var pdf = await pdfjsLib.getDocument({data: ab}).promise;
+        for (var i = 1; i <= pdf.numPages; i++) {
+          var page = await pdf.getPage(i);
+          var content = await page.getTextContent();
+          text += content.items.map(function(x) { return x.str; }).join(' ') + '\n';
+        }
+      } else if (ext === 'docx') {
+        await waitForLib('mammoth');
+        var r = await mammoth.extractRawText({arrayBuffer: ab});
+        text = r.value;
+      } else if (ext === 'xlsx') {
+        await waitForLib('XLSX');
+        var wb = XLSX.read(ab, {type: 'array'});
+        wb.SheetNames.forEach(function(n) {
+          text += '[' + n + ']\n';
+          var rows = XLSX.utils.sheet_to_json(wb.Sheets[n], {header: 1});
+          rows.forEach(function(row) {
+            text += row.filter(function(x) { return x !== undefined && x !== null && x !== ''; }).join(' | ') + '\n';
+          });
+        });
+      }
+      resumeText = text;
+      resumeName = file.name;
+      pv.textContent = text.substring(0, 2000) + (text.length > 2000 ? '\n\n...(생략)' : '');
+      statusMsg('✅ ' + text.length.toLocaleString() + '자 읽음', 'ok');
+    } catch(err) {
+      pv.textContent = '❌ 오류: ' + err.message;
+      statusMsg('❌ 파일 읽기 실패', 'err');
+    }
+  };
+  reader.readAsArrayBuffer(file);
+}
+
+function waitForLib(name, timeout) {
+  timeout = timeout || 25000;
+  return new Promise(function(resolve, reject) {
+    var waited = 0;
+    function check() {
+      if (window[name]) { resolve(); return; }
+      waited += 200;
+      if (waited >= timeout) { reject(new Error(name + ' 로딩 실패')); return; }
+      setTimeout(check, 200);
+    }
+    check();
+  });
+}
+
+function statusMsg(text, type) {
+  var el = document.getElementById('status');
+  el.textContent = text;
+  el.className = 'msg ' + (type || '');
+}
+
+// ====== STEP 1 -> STEP 2: ANALYZE ======
+document.getElementById('evalBtn').onclick = async function() {
+  if (!resumeText) { statusMsg('❗ 먼저 이력서 파일을 업로드하세요', 'err'); return; }
+  var btn = this;
+  btn.disabled = true;
+  btn.textContent = '⏳ 분석 중...';
+  statusMsg('AI 분석 중... (15~30초 소요)', '');
+
+  try {
+    var resp = await fetch(serverUrl + '/analyze', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({resumeText: resumeText, resumeName: resumeName})
+    });
+    var data = await resp.json();
+    if (!data.success) {
+      statusMsg('❌ ' + (data.error || '분석 실패'), 'err');
+      btn.disabled = false; btn.textContent = '🤖 AI 분석 시작';
+      return;
+    }
+    analysisData = data.analysis;
+    document.getElementById('loading2').style.display = 'none';
+    document.getElementById('reviewContent').style.display = 'block';
+    renderReview(data.analysis);
+    showStep(2);
+    statusMsg('', '');
+  } catch(e) {
+    statusMsg('❌ 서버 연결 실패: ' + e.message, 'err');
+  }
+  btn.disabled = false;
+  btn.textContent = '🤖 AI 분석 시작';
+};
+
+// ====== RENDER REVIEW (STEP 2) ======
+function renderReview(analysis) {
+  var c = document.getElementById('itemsContainer');
+  c.innerHTML = '';
+  var tot = 0;
+
+  analysis.items.forEach(function(item) {
+    tot += item.currentScore;
+    var div = document.createElement('div');
+    div.className = item.ambiguous ? 'item ambi' : 'item';
+
+    var ambiBadge = item.ambiguous ? '<span class="badge">⚠️ 애매</span>' : '';
+
+    var html = '<h3>' + item.name + ' <span class="max">(만점 ' + item.maxScore + '점)</span>' + ambiBadge + '</h3>';
+
+    // Evidence
+    if (item.evidence) html += '<div class="ev"><b>📄 이력서:</b> ' + escHtml(item.evidence) + '</div>';
+
+    // Options
+    if (item.id === 5) {
+      // 가점 - subOptions as checkboxes
+      html += '<div class="re"><b>사유:</b> ' + escHtml(item.reason) + '</div>';
+      html += '<div class="subopts">';
+      (item.subOptions || []).forEach(function(sub) {
+        var checked = sub.applied ? 'checked' : '';
+        html += '<div class="subopt">';
+        html += '<input type="checkbox" class="subChk" data-item="5" data-sub="' + sub.id + '" ' + checked + '>';
+        html += '<label>' + sub.label + '</label>';
+        html += '<span class="rs">' + escHtml(sub.reason || '') + '</span>';
+        html += '<span class="sc2">' + (sub.applied ? '+5' : '0') + '</span>';
+        html += '</div>';
+      });
+      html += '</div>';
+      var bonusTot = (item.subOptions || []).filter(function(s) { return s.applied; }).length * 5;
+      html += '<div class="sc"><span class="pts" id="score5">' + bonusTot + '</span> / ' + item.maxScore + '</div>';
+    } else {
+      html += '<div class="re"><b>사유:</b> ' + escHtml(item.reason) + '</div>';
+      html += '<label>점수 선택:</label>';
+      html += '<select class="itemSelect" data-id="' + item.id + '">';
+      (item.options || []).forEach(function(opt) {
+        var sel = opt.id === item.selectedOption ? 'selected' : '';
+        html += '<option value="' + opt.id + '" data-score="' + opt.score + '" ' + sel + '>' + escHtml(opt.label) + ' (' + opt.score + '점)</option>';
+      });
+      html += '</select>';
+      html += '<div class="sc"><span class="pts" id="score' + item.id + '">' + item.currentScore + '</span> / ' + item.maxScore + '</div>';
+    }
+
+    div.innerHTML = html;
+    c.appendChild(div);
+  });
+
+  // Auto total
+  document.getElementById('autoTotal').textContent = 'AI 추정 총점: ' + tot + ' / 100';
+
+  // Attach change events for live total update
+  document.querySelectorAll('.itemSelect').forEach(function(sel) {
+    sel.onchange = updateReviewTotal;
+  });
+  document.querySelectorAll('.subChk').forEach(function(chk) {
+    chk.onchange = updateReviewTotal;
+  });
+  updateReviewTotal();
+}
+
+function updateReviewTotal() {
+  var tot = 0;
+  analysisData.items.forEach(function(item) {
+    if (item.id === 5) {
+      var checked = document.querySelectorAll('.subChk[data-item="5"]:checked').length;
+      var sc = checked * 5;
+      var el = document.getElementById('score5');
+      if (el) el.textContent = sc;
+      tot += sc;
+      return;
+    }
+    var sel = document.querySelector('.itemSelect[data-id="' + item.id + '"]');
+    if (sel) {
+      var opt = sel.options[sel.selectedIndex];
+      var sc = parseInt(opt.getAttribute('data-score'));
+      var el = document.getElementById('score' + item.id);
+      if (el) el.textContent = sc;
+      tot += sc;
+    } else {
+      tot += item.currentScore;
+    }
+  });
+  document.getElementById('autoTotal').textContent = '현재 총점: ' + tot + ' / 100';
+  return tot;
+}
+
+function escHtml(s) {
+  if (!s) return '';
+  var d = document.createElement('div');
+  d.textContent = s;
+  return d.innerHTML;
+}
+
+// ====== STEP 2 -> STEP 3: CONFIRM ======
+document.getElementById('confirmBtn').onclick = function() {
+  var items = [];
+  var hasUnresolved = false;
+
+  analysisData.items.forEach(function(item) {
+    var obj = {id: item.id, name: item.name, maxScore: item.maxScore, reason: item.reason, evidence: item.evidence};
+
+    if (item.id === 5) {
+      var subs = [];
+      var checked = document.querySelectorAll('.subChk[data-item="5"]');
+      var subReasons = item.subOptions || [];
+      checked.forEach(function(chk, idx) {
+        var sr = subReasons[idx] || {};
+        subs.push({
+          id: sr.id || chk.getAttribute('data-sub'),
+          label: sr.label || '',
+          score: 5,
+          applied: chk.checked,
+          reason: sr.reason || ''
+        });
+      });
+      var bonusTot = subs.filter(function(s) { return s.applied; }).length * 5;
+      obj.currentScore = bonusTot;
+      obj.subOptions = subs;
+      obj.selectedOption = null;
+      obj.options = [];
+    } else {
+      var sel = document.querySelector('.itemSelect[data-id="' + item.id + '"]');
+      if (sel) {
+        var opt = sel.options[sel.selectedIndex];
+        obj.currentScore = parseInt(opt.getAttribute('data-score'));
+        obj.selectedOption = opt.value;
+        obj.options = item.options;
+      } else {
+        obj.currentScore = item.currentScore;
+        obj.selectedOption = item.selectedOption;
+        obj.options = item.options;
+      }
+    }
+
+    if (item.ambiguous) hasUnresolved = true;
+    items.push(obj);
+  });
+
+  var total = items.reduce(function(s, i) { return s + i.currentScore; }, 0);
+  var pass = total >= 70;
+
+  // Mark step 2 done, show step 3
+  renderResult(items, total, pass);
+  showStep(3);
+
+  if (hasUnresolved) {
+    document.getElementById('finalTotal').textContent += ' ⚠️';
+  }
+};
+
+// ====== RENDER RESULT (STEP 3) ======
+function renderResult(items, total, pass) {
+  var tbody = document.getElementById('resultBody');
+  tbody.innerHTML = '';
+  var editArea = document.getElementById('editArea');
+  editArea.innerHTML = '';
+
+  items.forEach(function(item) {
+    // Result table row
+    var tr = document.createElement('tr');
+    tr.innerHTML = '<td>' + item.name + '</td><td>' + item.maxScore + '</td><td>' + getSelectedLabel(item) + '</td>'
+      + '<td style="font-weight:bold;color:' + (item.currentScore >= item.maxScore * 0.8 ? '#4caf50' : '#ffcc00') + '">' + item.currentScore + '</td>'
+      + '<td style="font-size:11px;text-align:left;color:#999">' + escHtml((item.reason || '').substring(0, 80)) + '</td>';
+    tbody.appendChild(tr);
+
+    // Editable controls
+    var ediv = document.createElement('div');
+    ediv.style.cssText = 'border:1px solid #333;border-radius:8px;padding:12px;margin-bottom:8px;background:#0d0d1a';
+    var titleHtml = '<div style="font-size:13px;font-weight:bold;color:#ffcc00;margin-bottom:6px">' + item.name + ' <span style="color:#666;font-weight:normal">(만점 ' + item.maxScore + '점)</span></div>';
+
+    if (item.id === 5) {
+      var subHtml = '';
+      (item.subOptions || []).forEach(function(sub) {
+        var checked = sub.applied ? 'checked' : '';
+        subHtml += '<label style="display:flex;align-items:center;gap:8px;font-size:13px;padding:4px 0;cursor:pointer">'
+          + '<input type="checkbox" class="resChk" data-item="5" data-sub="' + sub.id + '" ' + checked + ' style="width:16px;height:16px;accent-color:#ffcc00">'
+          + sub.label + ' <span style="color:#888;font-size:11px">'
+          + (sub.applied ? '(적용)' : '(미적용)') + '</span></label>';
+      });
+      ediv.innerHTML = titleHtml + '<div style="font-size:11px;color:#666;margin-bottom:6px">' + escHtml(item.reason || '') + '</div>' + subHtml;
+    } else {
+      var selHtml = '<select class="resSelect" data-id="' + item.id + '" style="padding:6px 10px;border-radius:6px;border:1px solid #555;background:#222;color:#ddd;font-size:13px">';
+      (item.options || []).forEach(function(opt) {
+        var sel = opt.id === item.selectedOption ? 'selected' : '';
+        selHtml += '<option value="' + opt.id + '" data-score="' + opt.score + '" ' + sel + '>' + opt.label + ' (' + opt.score + '점)</option>';
+      });
+      selHtml += '</select>';
+      ediv.innerHTML = titleHtml + '<div style="font-size:11px;color:#666;margin-bottom:6px">' + escHtml(item.reason || '') + '</div>' + selHtml;
+    }
+
+    editArea.appendChild(ediv);
+  });
+
+  var el = document.getElementById('finalTotal');
+  el.textContent = '총점: ' + total + ' / 100';
+  el.className = 'big ' + (pass ? 'pass' : 'fail');
+  if (pass) {
+    el.textContent += ' ✅ 합격';
+  } else {
+    el.textContent += ' ❌ 불합격';
+  }
+}
+
+function getSelectedLabel(item) {
+  if (item.id === 5) {
+    var subs = item.subOptions || [];
+    var applied = subs.filter(function(s) { return s.applied; });
+    if (applied.length === 0) return '해당 없음';
+    return applied.map(function(s) { return s.label.replace(' (+5)',''); }).join(', ');
+  }
+  var opt = (item.options || []).find(function(o) { return o.id === item.selectedOption; });
+  return opt ? opt.label : '-';
+}
+
+// ====== RECALCULATE (STEP 3) ======
+document.getElementById('recalcBtn').onclick = function() {
+  var items = [];
+  analysisData.items.forEach(function(item) {
+    var obj = {id: item.id, name: item.name, maxScore: item.maxScore, reason: item.reason, evidence: item.evidence};
+
+    if (item.id === 5) {
+      var subs = (item.subOptions || []).map(function(sub) {
+        var chk = document.querySelector('.resChk[data-item="5"][data-sub="' + sub.id + '"]');
+        var applied = chk ? chk.checked : sub.applied;
+        return {id: sub.id, label: sub.label, score: sub.score, applied: applied, reason: sub.reason};
+      });
+      var bonusTot = subs.filter(function(s) { return s.applied; }).length * 5;
+      obj.currentScore = bonusTot;
+      obj.subOptions = subs;
+      obj.selectedOption = null;
+      obj.options = [];
+    } else {
+      var sel = document.querySelector('.resSelect[data-id="' + item.id + '"]');
+      if (sel) {
+        var opt = sel.options[sel.selectedIndex];
+        obj.currentScore = parseInt(opt.getAttribute('data-score'));
+        obj.selectedOption = opt.value;
+        obj.options = item.options;
+      } else {
+        obj.currentScore = item.currentScore;
+        obj.selectedOption = item.selectedOption;
+        obj.options = item.options;
+      }
+    }
+    items.push(obj);
+  });
+
+  var total = items.reduce(function(s, i) { return s + i.currentScore; }, 0);
+  var pass = total >= 70;
+  renderResult(items, total, pass);
+};
+
+// ====== NAVIGATION ======
+document.getElementById('resetBtn').onclick = resetAll;
+document.getElementById('resetBtn2').onclick = resetAll;
+document.getElementById('backBtn').onclick = function() { showStep(1); };
+document.getElementById('backBtn2').onclick = function() {
+  document.getElementById('loading2').style.display = 'none';
+  document.getElementById('reviewContent').style.display = 'block';
+  if (analysisData) renderReview(analysisData);
+  showStep(2);
+};
+
+function resetAll() {
+  resumeText = ''; resumeName = ''; analysisData = null;
+  dz.classList.remove('done');
+  pv.classList.remove('on');
+  pv.textContent = '';
+  fi.value = '';
+  document.getElementById('itemsContainer').innerHTML = '';
+  document.getElementById('resultBody').innerHTML = '';
+  document.getElementById('editArea').innerHTML = '';
+  document.getElementById('autoTotal').textContent = '';
+  document.getElementById('finalTotal').textContent = '';
+  document.getElementById('finalTotal').className = 'big';
+  showStep(1);
+  statusMsg('🔄 초기화됨', '');
+}
+</script>
+</body>
+</html>

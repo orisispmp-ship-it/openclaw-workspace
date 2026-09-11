@@ -1,0 +1,11 @@
+{
+  "name": "감리원 평가 도우미",
+  "short_name": "감리평가",
+  "description": "감리원 평가기준과 이력서로 AI 평가",
+  "start_url": "index.html",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#1a1a2e",
+  "theme_color": "#1a1a2e",
+  "categories": ["business", "productivity"]
+}

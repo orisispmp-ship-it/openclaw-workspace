@@ -1,0 +1,10 @@
+tools:
+  media:
+    audio:
+      enabled: true
+      maxBytes: 20971520
+      models:
+        - type: cli
+          command: C:\Users\orisi\.openclaw\bin\whisper.cmd
+          args: ["{{MediaPath}}"]
+          timeoutSeconds: 30

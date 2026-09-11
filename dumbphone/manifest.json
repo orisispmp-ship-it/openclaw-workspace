@@ -1,0 +1,11 @@
+{
+  "name": "바보폰",
+  "short_name": "바보폰",
+  "description": "Galaxy를 바보폰으로 바꿔주는 미니멀 런처",
+  "start_url": "index.html",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#000000",
+  "theme_color": "#000000",
+  "categories": ["lifestyle", "productivity"]
+}

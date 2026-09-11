@@ -1,0 +1,23 @@
+﻿HKCU:\Software\Microsoft\Windows\CurrentVersion\Run :: OneDrive = "C:\Users\orisi\AppData\Local\Microsoft\OneDrive\OneDrive.exe" /background
+HKCU:\Software\Microsoft\Windows\CurrentVersion\Run :: KakaoTalk = "C:\Program Files (x86)\Kakao\KakaoTalk\KakaoTalk.exe" -bystartup
+HKCU:\Software\Microsoft\Windows\CurrentVersion\Run :: powernhit_manager = C:\Users\orisi\AppData\Local\powernhit\powernhit_manager.exe
+HKCU:\Software\Microsoft\Windows\CurrentVersion\Run :: UbiViewerWS = "C:\Users\orisi\AppData\Roaming\UbiDecision\UbiViewerWS\UbiViewerWS.exe"
+HKCU:\Software\Microsoft\Windows\CurrentVersion\Run :: Anchortools Launcher = C:\SoftBridge\Flint.exe
+HKCU:\Software\Microsoft\Windows\CurrentVersion\Run :: CrossEXService = C:\Program Files (x86)\iniLINE\CrossEX\crossex\CrossEXService.exe
+HKCU:\Software\Microsoft\Windows\CurrentVersion\Run :: Adobe Acrobat Synchronizer = "C:\Program Files\Adobe\Acrobat DC\Acrobat\AdobeCollabSync.exe"
+HKCU:\Software\Microsoft\Windows\CurrentVersion\Run :: weaping = C:\Users\orisi\AppData\Local\TemperatureIndicator\TemperatureIndicator.exe
+HKCU:\Software\Microsoft\Windows\CurrentVersion\Run :: weapingU = C:\Users\orisi\AppData\Local\TemperatureIndicator\weapUpdater.exe
+HKCU:\Software\Microsoft\Windows\CurrentVersion\Run :: WindowsOptimizer = "C:\Users\orisi\AppData\Local\WindowsOptimizer\app-2.7.13\WindowsOptimizer.exe"
+HKCU:\Software\Microsoft\Windows\CurrentVersion\Run :: electron.app.Notion = "C:\Users\orisi\AppData\Local\Programs\Notion\Notion.exe" --open-at-login
+HKCU:\Software\Microsoft\Windows\CurrentVersion\Run :: electron.app.LM Studio = C:\Users\orisi\AppData\Local\Programs\LM Studio\LM Studio.exe --run-as-service
+HKCU:\Software\Microsoft\Windows\CurrentVersion\Run :: Microsoft.Lists = C:\Users\orisi\AppData\Local\Microsoft\OneDrive\26.153.0809.0004\OneDrive.Sync.Service.exe
+HKCU:\Software\Microsoft\Windows\CurrentVersion\Run :: SmartBridgeLauncher = C:\Program Files (x86)\VP\AD\SmartBridgeLauncher.exe
+HKCU:\Software\Microsoft\Windows\CurrentVersion\Run :: MYBOX = C:\Program Files\NAVER Cloud\MYBOX\MYBOXLauncher_x64_MT.exe
+HKCU:\Software\Microsoft\Windows\CurrentVersion\Run :: GoogleChromeAutoLaunch_920C5434D18792F4F6249005034406D7 = "C:\Program Files\Google\Chrome\Application\chrome.exe" --no-startup-window /prefetch:5
+HKLM:\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Run :: ipinside-lws = C:\Program Files (x86)\IPinside_LWS\I3GProc.exe
+HKLM:\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Run :: CROSSCERT UniCRSV3 = C:\Program Files (x86)\Crosscert\UniSignCRSV3\UniCRSLocalServer.exe
+HKLM:\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Run :: CROSSCERT UniCRSV3 Daemon = C:\Program Files (x86)\Crosscert\UniSignCRSV3\CCDaemon.exe
+HKLM:\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Run :: SKCertService Client = C:\Program Files (x86)\SignKorea\skcert\SKCertService.exe
+HKLM:\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Run :: MagicLine4NX = C:\Program Files (x86)\DreamSecurity\MagicLine4NX\MagicLine4NX.exe
+HKLM:\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Run :: CROSSCERT Notify Center = C:\Program Files (x86)\Crosscert\UniSignCRSV3\UniCRSNotiCenter.exe
+HKLM:\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Run :: AnySign4PC = "C:\Program Files (x86)\SoftForum\XecureWeb\AnySign\dll\AnySign4PC.exe" "port=10530;port_s=10531;no_shut=1"
