@@ -1,0 +1,8 @@
+[main/sessions/main/015aa613-b5df-4821-b0f7-2226b2e959ae#L197] User: 미국 증시 요약해줘
+[main/sessions/main/015aa613-b5df-4821-b0f7-2226b2e959ae#L205] Assistant: ## 🇺🇸 미국 증시 마감 요약 **2026년 9월 21일(월) 마감** — ET 16:00 / 한국시간 9/22 05:00 · 세션 종료됨 **📈 3대 지수 동반 상승** - **S&P 500: +1.5%** (약 7,765) - **나스닥: +2.3% → 27,122** 사상 최고 마감 🚀 - **다우: +366p → 약 52,050** (직전 완료 마감 51,682.64 기준) **🔍 상승 동인 4가지** 1. **국채금리 하락** — 최근 시장을 짓누르던 매크로
+[main/sessions/main/015aa613-b5df-4821-b0f7-2226b2e959ae#L205] Assistant: 수치는 CFD/실시간 집계 기준이라 거래소 공식 종가와 소수점 차이가 있을 수 있어. 다우 종가 레벨은 금요일 종가 +366p로 계산한 값이고, 다우 전문 사이트(dowjonestoday)는 아직 9/18까지 갱신돼 있어 — 오늘 밤에 다시 물어보면 공식 종가로 정확히 정리해줄게. 3주 전에 껐던 "매일 아침 증시 요약" 자동 발송, 다시 켜둘까? 필요할 때만 요청하는 게 낫다고 해서 지금은 꺼져 있어.
+[main/sessions/main/015aa613-b5df-4821-b0f7-2226b2e959ae#L206] User: 메타의 새 ai는?
+[main/sessions/main/015aa613-b5df-4821-b0f7-2226b2e959ae#L209] Assistant: Meta의 새 AI 이름이 보이네 — **"Muse"**. 자세한 내용을 확인할게.
+[main/sessions/main/015aa613-b5df-4821-b0f7-2226b2e959ae#L212] Assistant: Meta의 새 AI는 **"Muse(뮤즈)"** 구나. 공식 발표 내용을 확인할게.
+[main/sessions/main/015aa613-b5df-4821-b0f7-2226b2e959ae#L215] Assistant: ## 🤖 Meta의 새 AI = **"Muse(뮤즈)"** Meta가 **2026년 9월 8일** 출시한 **첫 개인용 AI 에이전트**야. 챗봇이 아니라 **실제로 일을 대신 처리하는 에이전트**가 핵심. **📌 기본 정보** - **정식 명칭**: Muse (The World's First Personal AI Agent Built for Everyone) - **구동 모델**: **Muse Spark** — Meta의 최신 플래그십 모델 (agentic 작업용) - *
+[main/sessions/main/015aa613-b5df-4821-b0f7-2226b2e959ae#L215] Assistant: **Muse Confidential VM** 예정 — *Meta조차* 못 여는 암호화 **💳 결제**: Stripe의 **Link**로 체크아웃 — AI 에이전트로는 **최초로 구매 보호** 적용(파손·분실·가격하락·무료 반품), 일회용 카드로 실제 카드번호 숨김 **💰 가격**: 대부분 **무료** / 구독 **$20·$100** (사용량별) --- **📈 그래서 왜 증시가 들썩였나** - 출시 약 5일 만에 **73만 다운로드**, 9/18(금) **미국 iOS 무료 
