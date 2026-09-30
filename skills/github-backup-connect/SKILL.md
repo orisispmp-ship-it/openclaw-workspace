@@ -75,7 +75,21 @@ job payload가 스크립트를 인라인으로 들고 있으면 파일과 job을
 
 보고에는 커밋 해시, 스테이징 파일 수, 푸시 검증 결과를 포함한다. 이후 워크스페이스 변경은 같은 저장소에 커밋·푸시한다.
 
-## 3. 상태 백업 스케줄
+## 3. 현장일기 저장소 (별도 repo)
+
+`~/.openclaw/workspace/현장일기`는 워크스페이스와 **별개 git 저장소**(remote `git@github.com:orisispmp-ship-it/site-diary.git`, branch `main`)이고 워크스페이스 루트 커밋에는 들어가지 않는다. 일기 기록은 이 저장소 안에서 커밋·푸시한다. "나의 일기"는 `현장일기/나의일기/YYYY-MM-DD.md`, 현장일기는 `현장일기/YYYY-MM-DD.md`에 쓴다.
+
+```powershell
+cd ~/.openclaw/workspace/현장일기
+git add "나의일기/YYYY-MM-DD.md"
+git commit -m "현장일기 백업 (YYYY-MM-DD)"
+git push
+git status -sb
+```
+
+커밋 메시지는 기존 이력과 같은 `현장일기 백업 (YYYY-MM-DD)` 형식을 쓰고, 푸시 검증은 push 출력의 `main -> main` 또는 `git status -sb`에 ahead 표시가 없는 것으로 확인한다.
+
+## 4. 상태 백업 스케줄
 
 원격 저장소를 먼저 만든 뒤에만 스케줄을 건다. `--push`는 origin remote가 없으면 거부된다.
 

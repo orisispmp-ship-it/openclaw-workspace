@@ -36,6 +36,7 @@
   - **2026-08-29 업데이트**: 기상시간 대폭 앞당김. 새벽 5시 출근, 평일 2~2.5시간 공부 목표.
   - **10/31(토): Part B 실기 시험 (첫 관문)** (2026-08-29 등록). 응시료 250만원은 아내가 금을 팔아 마련해줌. 한번에 합격이 목표.
   - 시험 구성: Part A(기초 60문항) → Part B(실기 46문항) → Part C(코드 적용 50문항, 코드북 개방). 합격선: 각 파트 72% + 평균 72%.
+  - **2026-09-30 진행**: Part A 절차서 2회 정독 완료. **오늘부터 Part B BOS 정독 시작.** (나의일기 9/30)
 - **아이폰은 MDM을 켜도 핫스팟 사용 가능** (2026-08-26, 사내에서 확인)
 - **PC 애드웨어 정리 (2026-09-11)**: 크롬 쿠팡 광고창 원인 애드웨어 6종 제거(winfavorites/Smart Windows Favorite, SecureConnection(MONSTERJ), MiteNews, Temperature Indicator, WindowsOptimizer, Anchortools·Flint, SmartBridge). 상세: memory/2026-09-11.md. 금융·인증 프로그램은 보존.
 - **애드웨어 잔존 (2026-09-11 월간 점검에서 발견)**: `check_secureconnection` 레지스트리 2곳 잔존, `secureconnectionservice` 프로세스, Chrome 정책 `InsecurePrivateNetworkRequestsAllowed=1`, AppPatch CustomSDB 의심 GUID. 미푸시 현장일기 커밋 1건.
