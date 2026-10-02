@@ -1,0 +1,33 @@
+[main/sessions/main/015aa613-b5df-4821-b0f7-2226b2e959ae#L274] Assistant: ☀️ 오늘의 손자병법 📜 원문: 亂而取之(란이취지) 💬 해석: 어지러우면 취한다. 🎯 오늘의 적용: 혼란한 틈에 기회가 온다.
+[main/sessions/main/015aa613-b5df-4821-b0f7-2226b2e959ae#L275] Assistant: 📌 **오늘(10/1 목) — 평택현장 2차 임시사용승인 단지개요 공유** 예정일입니다. 진행 상황 확인 부탁드립니다. 다음 단계는 **10/5(D-1) 점검 알림 → 10/6(화) 평택시 제출**이니, 제출 서류 준비 상태도 미리 함께 봐두시면 좋겠습니다.
+[main/sessions/main/015aa613-b5df-4821-b0f7-2226b2e959ae#L276] Assistant: 📋 **월간 PC 정기 점검 (2026-10-01)** — 읽기 전용 진단, 변경 없음 ⚙️ **① 애드웨어 재발 흔적: 발견됨 (2건)** **1) SmartBridge (Enliple 계열) 잔존 — 유력** - `HKCU\Software\SmartBridge` (Updater/Client v1.0764, PartCode 7) - `HKCU\Software\SmartBridge_UUID` (Uuid, Updater_Uuid) - `SmartBridge_CONFIG`: 설치
+[main/sessions/main/015aa613-b5df-4821-b0f7-2226b2e959ae#L276] Assistant: http/chrome/msedge 실행·AppData/ProgramData/Temp 경로 실행 없음 (전부 정상 항목: OneDrive, Chrome PEH, Lenovo Vantage, Defender) - Run 자동시작(HKCU/HKLM/WOW6432Node)·시작프로그램 폴더: 정상 (금융·인증 모듈 및 일반 앱만) - 서비스 PathName AppData/ProgramData/Temp: 없음 (ClipSVC는 정상 윈도우 서비스, 오탐) - 설치 프로그램 목록(Unin
+[main/sessions/main/015aa613-b5df-4821-b0f7-2226b2e959ae#L276] Assistant: 준비해 드리겠습니다.
+[main/sessions/main/015aa613-b5df-4821-b0f7-2226b2e959ae#L277] User: 간 영양제 종류
+[main/sessions/main/015aa613-b5df-4821-b0f7-2226b2e959ae#L278] Assistant: 간 영양제 종류를 정리해줄게. 정확한 성분·기준을 확인해볼게.
+[main/sessions/main/015aa613-b5df-4821-b0f7-2226b2e959ae#L281] Assistant: # 💊 간 영양제 종류 정리 **① 세포 보호·항산화 계열 (가장 대표)** - **밀크씨슬(엉겅퀴) — 실리마린**: 간 영양제의 대표. 간세포 보호·항산화 - **글루타치온(환원형)**: 항산화·해독 보조 - **NAC(N-아세틸시스테인)**: 글루타치온 전구체 - **비타민 E**: 항산화 (지방간 관련 연구 있음) **② 대사·피로 지원 계열** - **비타민 B군(B1·B2·B6·B12)**: 에너지 대사·피로 회복 - **타우린**: 담즙산 합성·해독 - **콜린·
+[main/sessions/main/015aa613-b5df-4821-b0f7-2226b2e959ae#L281] Assistant: 말할 부분** - 어떤 영양제도 **술의 독성을 상쇄하지 못해**. 음주 자체를 줄이는 게 먼저야 - 밀크씨슬·헛개나무 모두 **임상 근거는 제한적** — "치료"가 아니라 "보조" - **간 수치(AST/ALT)가 높으면 내과 진료가 우선**. 영양제로 버티는 건 위험해 - 실제 효과의 대부분은 **금주·체중관리·운동**에서 나와 **💡 무난한 조합 예시** - 기본: **밀크씨슬(실리마린 130mg)** 단독 또는 + 비타민B군 - 지방간 동반: + 오메가3 - ※ 약(항
+[main/sessions/main/015aa613-b5df-4821-b0f7-2226b2e959ae#L282] User: 지방간에 밀크씨슬 먹어도 되나
+[main/sessions/main/015aa613-b5df-4821-b0f7-2226b2e959ae#L283] Assistant: 지방간 + 밀크씨슬, 근거를 확인해볼게.
+[main/sessions/main/015aa613-b5df-4821-b0f7-2226b2e959ae#L286] Assistant: ## 답: **먹어도 돼. 대체로 안전하고, 지방간에서 "보조" 역할은 기대할 수 있어.** 다만 **치료제는 아니야.** **📊 근거 (지방간 = NAFLD/MASLD)** - **2024년 메타분석 (26개 RCT, 2,375명)**: 실리마린 복용 시 **ALT 평균 −12.4 U/L, AST −10.97 U/L** 유의하게 감소 - 즉 **"간 수치 개선"에는 근거가 있어** - ⚠️ 반대로 **간에 쌓인 지방 자체를 줄이는 효과는 근거가 약하고 일관되지 않아** — 
+[main/sessions/main/100e7145-411a-49cc-847a-4ceae392f097#L16] Assistant: 📌 **오늘(10/1 목) — 평택현장 2차 임시사용승인 단지개요 공유** 예정일입니다. 진행 상황 확인 부탁드립니다. 다음 단계는 **10/5(D-1) 점검 알림 → 10/6(화) 평택시 제출**이니, 제출 서류 준비 상태도 미리 함께 봐두시면 좋겠습니다.
+[main/sessions/main/f013cbaa-7472-433c-861e-0c2a0f69f49e#L2] User: 나의 일기 : 10/1 오픈클로가 노트북 바이러스 체크 및 제거 완료 (월1회 자동 실행)
+[main/sessions/main/f013cbaa-7472-433c-861e-0c2a0f69f49e#L17] Assistant: 10/1 일기 기록하고 백업까지 끝냈습니다. **저장 위치:** `현장일기/나의일기/2026-10-01.md` ``` # 2026-10-01 (목) — 개인일기 ## 노트북 관리 - 오픈클로가 노트북 바이러스 체크 및 제거 완료. (월 1회 자동 실행) ``` **백업:** 커밋 `f5dfa7c` → `site-diary` 저장소 push 완료 (`69b8fd4..f5dfa7c main -> main`, ahead 없음) <details><summary>참고</summary> 
+[main/sessions/main/f013cbaa-7472-433c-861e-0c2a0f69f49e#L18] User: 현장일기 : 10/1 10월 독서활동 "나의 문화유산 답사기 9" - 10/24 토요일 사무실에서 작성 예정
+[main/sessions/main/f013cbaa-7472-433c-861e-0c2a0f69f49e#L27] Assistant: 현장일기 10/1 파일에 추가하고 백업했습니다. **파일:** `현장일기/2026-10-01.md` ``` # 2026-10-01 (목) ## 현장일기 - 1층 메가커피 오픈 (09:23 기록) - 10월 독서활동 "나의 문화유산 답사기 9" — 10/24 토요일 사무실에서 작성 예정. ``` **백업:** 커밋 `5064a31` → push 완료 (`f5dfa7c..5064a31 main -> main`, ahead 없음) 10/24 작성 건은 알림 걸어둘까요? 원하시면 그날
+[main/sessions/main/fddb5180-af66-44b4-9452-b7d62e539f1e#L208] User: 나의일기 : 9/30 원곡동에서 저녁에 택시잡기 매우 어려움. 카카오택시(5천원/월) 다시 가입해야할지도 모름
+[main/sessions/main/fddb5180-af66-44b4-9452-b7d62e539f1e#L213] Assistant: 9/30 개인일기에 추가했습니다. **`현장일기/나의일기/2026-09-30.md` — 일상** - 원곡동에서 저녁에 **택시잡기 매우 어려움** → **카카오택시(월 5천원) 재가입 검토** GitHub 푸시 완료 (`298c722..afe8e51`).
+[main/sessions/main/fddb5180-af66-44b4-9452-b7d62e539f1e#L214] User: 현장일기 : 10/1 1층 메가커피 오픈
+[main/sessions/main/fddb5180-af66-44b4-9452-b7d62e539f1e#L219] Assistant: 10/1 현장일기 기록했습니다. **`현장일기/2026-10-01.md`** (신규) - **1층 메가커피 오픈** GitHub 푸시 완료 (`afe8e51..69b8fd4`).
+[main/sessions/main/015aa613-b5df-4821-b0f7-2226b2e959ae#L286] Assistant: 당뇨·고지혈·혈압 관리 **밀크씨슬은 이걸 "대신"하는 게 아니라 "곁들이는" 거야.** 그리고 **AST/ALT가 크게 높거나 섬유화 소견이 있으면** 영양제로 버티지 말고 **내과 진료가 먼저**야 (그 경우엔 약물 치료 대상일 수 있어). --- **더 정확히 봐줄까?** ① 최근 **AST/ALT 수치** ② 복부초음파 결과 (지방간 경도/중등도) ③ 현재 **복용 중인 약** — 이 3개 알려주면 "먹어도 되는지 + 어떤 제품(함량)"까지 구체적으로 좁혀줄게. 🎭
+[main/sessions/main/015aa613-b5df-4821-b0f7-2226b2e959ae#L287] User: 애드웨어와 가짜 북마크 수리해줘
+[main/sessions/main/015aa613-b5df-4821-b0f7-2226b2e959ae#L288] Assistant: 오늘 아침 월간 점검 결과부터 확인하고, 현재 상태를 진단할게.
+[main/sessions/main/015aa613-b5df-4821-b0f7-2226b2e959ae#L291] Assistant: 진단 완료. 원인이 명확해 — **SmartBridge(Enliple) 잔존 + 크롬/엣지 가짜 북마크 2건**. 전부 HKCU라 관리자 권한 없이도 정리 가능해. 먼저 전체 구조 확인 + 백업할게.
+[main/sessions/main/015aa613-b5df-4821-b0f7-2226b2e959ae#L293] Assistant: 진단 완료 — 백업도 떠놨어. 이제 정리할게. (참고: `C:\Program Files (x86)\VP`는 **VPWallet 결제 모듈**이라 보존 대상이야 — SmartBridge가 있던 `VP\AD`는 이미 없음)
+[main/sessions/main/015aa613-b5df-4821-b0f7-2226b2e959ae#L295] Assistant: 북마크 수리 스크립트 + SmartBridge 레지스트리 정리를 실행할게.
+[main/sessions/main/015aa613-b5df-4821-b0f7-2226b2e959ae#L297] Assistant: 정리 실행됐어. 최종 검증할게.
+[main/sessions/main/015aa613-b5df-4821-b0f7-2226b2e959ae#L299] Assistant: 정리 완료 ✅ 최종 검증까지 통과했어. 기록 남길게.
+[main/sessions/main/015aa613-b5df-4821-b0f7-2226b2e959ae#L301] Assistant: ## ✅ 애드웨어 + 가짜 북마크 수리 완료 **🔍 원인 (진단)** - **SmartBridge(Enliple) 잔존** — `HKCU\Software\SmartBridge` 및 하위키 - 주입 경로까지 확인: `SmartBridge_EDGE_FAURL_Default`에 **"쿠팡" → admin.smartbridge.co.kr/bookmark.php** 매핑 - 실행 중인 프로세스·예약작업·서비스는 없었음 → **죽은 설정값이지만, 이게 가짜 북마크를 심는 설정**이라 제
+[main/sessions/main/015aa613-b5df-4821-b0f7-2226b2e959ae#L301] Assistant: (x86)\VP` = **VPWallet 결제 모듈** (헷갈리기 쉬운데 애드웨어 아님) - `C:\SoftBridge`의 dainBroad (VOD 플레이어) **💾 백업** - `adware-cleanup-2026-10-01\` — SmartBridge.reg, SmartBridge_UUID.reg, 브라우저 Bookmarks 원본 - 수리 스크립트: `fix-bookmarks-20261001.py` (다음에도 재사용 가능) --- 👉 **크롬·엣지 창을 완전히 닫았다 
+[main/sessions/main/015aa613-b5df-4821-b0f7-2226b2e959ae#L302] User: edge의 의심 북마크도 정리해줘
+[main/sessions/main/015aa613-b5df-4821-b0f7-2226b2e959ae#L303] Assistant: Edge에 남은 의심 북마크를 정리할게. **광고 리다이렉트 계열은 자동 제거**하고, **OEM 번들(레노버/맥아피 등) 성격은 목록만 뽑아서** 확인받는 방식으로 할게.
