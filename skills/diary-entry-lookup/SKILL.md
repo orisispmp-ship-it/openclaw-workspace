@@ -26,6 +26,8 @@ description: "일기 보여줘·나의 일기·현장일기·회사일기 기록
 1. 실제 파일부터 확정한다: `Get-ChildItem ~/.openclaw/workspace/현장일기 -Recurse -File` 과 `git -C ~/.openclaw/workspace/현장일기 log --date=short --name-status`로 존재하는 날짜 목록을 얻는다.
 2. 없는 날짜는 "그 날짜 기록 없음"이라고 먼저 말한다. 파일을 만들어 채우거나 내용을 추측하지 않는다.
 3. 그 날짜에 유이사님이 실제로 무엇을 보냈는지 확인이 필요하면 읽기 전용으로 조회한다: `~/.openclaw/agents/main/agent/openclaw-agent.sqlite`(URI `file:...?mode=ro`)의 `session_transcript_fts`에서 `role='user'` + timestamp(ms epoch) 구간, 그리고 `workspace/memory/.dreams/session-corpus/YYYY-MM-DD.txt`.
+   - `session_transcript_fts` 컬럼은 `text, session_id, message_id, role, timestamp`다. 본문은 `text`이고 `content` 컬럼은 없다.
+   - `text`가 `[cron:...]`로 시작하는 행은 자동 실행이지 유이사님 발화가 아니다 → 제외하고 센다.
    - `python -c`에 따옴표를 중첩하면 문법 오류가 난다 → `workspace/tmp/*.py` 파일로 쓴다.
    - 한국어 결과는 콘솔에서 깨진다 → UTF-8 파일로 쓰고 `read`로 읽는다.
 4. `memory/dreaming/{light,deep,rem}/`와 `session-corpus`는 AI 요약이므로 일기 원본이 아니다. 원본 판정은 1번의 파일·git 이력으로만 한다.
