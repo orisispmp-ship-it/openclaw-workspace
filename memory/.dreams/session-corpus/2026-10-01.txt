@@ -31,3 +31,15 @@
 [main/sessions/main/015aa613-b5df-4821-b0f7-2226b2e959ae#L301] Assistant: (x86)\VP` = **VPWallet 결제 모듈** (헷갈리기 쉬운데 애드웨어 아님) - `C:\SoftBridge`의 dainBroad (VOD 플레이어) **💾 백업** - `adware-cleanup-2026-10-01\` — SmartBridge.reg, SmartBridge_UUID.reg, 브라우저 Bookmarks 원본 - 수리 스크립트: `fix-bookmarks-20261001.py` (다음에도 재사용 가능) --- 👉 **크롬·엣지 창을 완전히 닫았다 
 [main/sessions/main/015aa613-b5df-4821-b0f7-2226b2e959ae#L302] User: edge의 의심 북마크도 정리해줘
 [main/sessions/main/015aa613-b5df-4821-b0f7-2226b2e959ae#L303] Assistant: Edge에 남은 의심 북마크를 정리할게. **광고 리다이렉트 계열은 자동 제거**하고, **OEM 번들(레노버/맥아피 등) 성격은 목록만 뽑아서** 확인받는 방식으로 할게.
+[main/sessions/main/015aa613-b5df-4821-b0f7-2226b2e959ae#L307] Assistant: Edge 2차 정리 완료 ✅ 기록 남기고 결과 보고할게.
+[main/sessions/main/015aa613-b5df-4821-b0f7-2226b2e959ae#L309] Assistant: ## ✅ Edge 의심 북마크 2차 정리 완료 (18건 제거) **자동 제거한 것 — 전부 광고 리다이렉트 계열** - `l.socialfriendsinc.com/api/redirect_url?...` — **13건** (지마켓 · 예스24 · 하이마트 · 옥션 · 롯데홈쇼핑 · 알리 · 오늘의집 · 교보문고 · 이유몰 · 아고다 · 네이버스토어 · 티스테이션) - `shortcuticon.net/...` — 2건 (쿠팡, G마켓) - `ad.planbplus.co.kr/adL
+[main/sessions/main/015aa613-b5df-4821-b0f7-2226b2e959ae#L309] Assistant: shopping.zum.com/?utm_source=estsw&utm_medium=altools **2) 제휴(어필리에이트) 링크 — 본인이 추가했을 수 있음** - `위메프-특가` → front.wemakeprice.com/affiliate/bridge - `쿠팡!` → coupa.ng/… (쿠팡 공식 단축링크) - `패션 최저가-하프클럽` → halfclub.com/partner/… --- 👉 **1번은 그냥 지울까?** (광고·번들 성격이 확실해) 👉 **2번은 네가 
+[main/sessions/main/015aa613-b5df-4821-b0f7-2226b2e959ae#L310] User: 1,2번 둘다 지워줘.
+[main/sessions/main/015aa613-b5df-4821-b0f7-2226b2e959ae#L311] Assistant: 1·2번 둘 다 지울게.
+[main/sessions/main/015aa613-b5df-4821-b0f7-2226b2e959ae#L315] Assistant: 3차 정리에서 Edge 10건 제거됐는데, 재확인에 `wemakeprice`가 아직 잡혔어. 정체를 확인할게.
+[main/sessions/main/015aa613-b5df-4821-b0f7-2226b2e959ae#L317] Assistant: `wemakeprice` 잡힌 건 **어필리에이트 리다이렉트가 아니라 위메프 본사이트 직접 링크**야. 기록 남기고 마무리 보고할게.
+[main/sessions/main/015aa613-b5df-4821-b0f7-2226b2e959ae#L319] Assistant: ## ✅ 1·2번 모두 삭제 완료 (3차 정리) **Edge에서 10건 제거** - **1) OEM 번들 (4건)** - McAfee (consroute.mcafee.com) - AmazonBrowserBar (lenovo-abb) - Voxox Free Calls (voxox.com/lenovo) - 쇼핑zum (utm_source=estsw&utm_medium=altools) - **2) 제휴 링크 (6건)** — 같은 항목이 폴더 2곳에 중복돼 있었어 - 위메프-특가 ×2
+[main/sessions/main/015aa613-b5df-4821-b0f7-2226b2e959ae#L319] Assistant: 번들·제휴 | 10건 (3차) | | SmartBridge 레지스트리 | 2개 키 | | **합계** | **북마크 39건 + 레지스트리 2키** | **👉 크롬·엣지 창을 완전히 닫았다 다시 열어줘.** 북마크바가 한결 깨끗해졌을 거야. 다음 월간 점검(11/1)에서 재발 여부를 자동으로 확인해줄게. 🎭
+[main/sessions/main/015aa613-b5df-4821-b0f7-2226b2e959ae#L320] User: 다시 열었어
+[main/sessions/main/015aa613-b5df-4821-b0f7-2226b2e959ae#L321] Assistant: 크롬·엣지를 다시 열었으니, **재시작 후에도 정리가 유지됐는지** 확인할게 (이게 진짜 검증이야).
+[main/sessions/main/015aa613-b5df-4821-b0f7-2226b2e959ae#L323] Assistant: ⚠️ **중요한 문제를 발견했어 — 엣지가 삭제한 북마크를 되살렸어.** 재시작 후 엣지 checksum이 우리가 쓴 값(`a4368ca2`)이 아니라 `60e5b690`으로 바뀌었고, **삭제했던 항목들이 전부 다시 들어와 있어.** 원인을 추적할게.
