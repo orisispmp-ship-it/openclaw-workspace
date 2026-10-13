@@ -20,10 +20,10 @@ description: "현장 일정·마감 알림 등록: 기억 기록 + 텔레그램 
 5. 만든 작업의 `id`와 `nextRunAtMs`를 확인해 사용자에게 단계 표 + 알림 목록으로 보고한다.
 
 ## 함정
-- `delivery.channel:"telegram"`만 넣고 `to`를 빠뜨리면 실행 시 `Delivering to Telegram requires target <chatId>`로 **발송 실패**한다. 이력상 실패한 알림 3건(8/29, 9/10, 9/16)과 미발송 예정이던 2건(10/12, 10/26)이 전부 이 원인이었다. 기존 작업을 점검하다 이 상태를 발견하면 `delivery.to`를 채워 고친다.
-- 만든 알림을 `run`(force)으로 테스트하면 "오늘(10/1)" 같은 어긋난 날짜 문구가 실제로 전송된다. 검증은 force 실행이 아니라 `delivery.to` 비교와 `nextRunAtMs` 확인으로 한다.
+- `delivery.channel:"telegram"`만 넣고 `to`를 빠뜨리면 실행 시 `Delivering to Telegram requires target <chatId>`로 **발송 실패**한다. 기존 작업을 점검하다 이 상태를 발견하면 `delivery.to`를 채워 고친다.
+- 만든 알림을 `run`(force)으로 테스트하면 어긋난 날짜 문구(예: "오늘(M/D)")가 실제로 전송된다. 검증은 force 실행이 아니라 `delivery.to` 비교와 `nextRunAtMs` 확인으로 한다.
 - `automations` 툴 수정이 소유자 정책으로 막히면 CLI(`openclaw automations edit`)를 쓴다.
-- 등록해 둔 미래 일회성 알림이 실행 전에 목록에서 사라진 사례가 있다 (10/8에 만든 10/23 임사·10/26 월간물량검증 job이 10/12 `automations` list에 없음).
+- 등록해 둔 미래 일회성 알림이 실행 전에 목록에서 사라진 사례가 있다.
 
 ## 일정 확인 요청
 
@@ -33,4 +33,4 @@ description: "현장 일정·마감 알림 등록: 기억 기록 + 텔레그램 
 2. `automations` list(`includeDisabled:true`)로 현재 작업 목록을 받아 job id를 맞춰본다.
 3. 이력에는 있는데 목록에 없으면 그 자리에서 다시 `automations` add로 등록하고, `MEMORY.md`의 job id를 새 값으로 바꾼다. 완료 기준: 단계·상태 표 + 대조 결과 + 재등록 job id를 보고한다.
 
-유이사님 현장 약어 **임사 = 임시사용승인** (평택현장 2차: 9/28 세움터 개설 → 10/1 단지개요 공유 → 10/6 평택시 제출 → 10/23 승인 득). 이 약어로 물으면 `MEMORY.md` `## 업무`의 임시사용승인 항목을 바로 확인한다.
+유이사님 현장 약어 **임사 = 임시사용승인**. 이 약어로 물으면 `MEMORY.md` `## 업무`의 임시사용승인 항목을 바로 확인한다.
